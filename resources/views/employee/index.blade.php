@@ -21,6 +21,7 @@
                 <th>Kode Karyawan</th>
                 <th>Nama Karyawan</th>
                 <th>Divisi</th>
+                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -29,6 +30,17 @@
                     <td>{{ $emp->e_code }}</td>
                     <td>{{ $emp->e_name }}</td>
                     <td>{{ $emp->division->d_name ?? '-' }}</td>
+                    <td>{{ $emp->division->d_name ?? '-' }}</td>
+                    <td>
+                        <a href="{{ route('employee.edit', $emp->e_code) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <form action="{{ route('employee.destroy', $emp->e_code) }}" method="POST" class="d-inline"
+                            onsubmit="return confirm('Yakin ingin menghapus karyawan ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                        </form>
+                    </td>
+
                 </tr>
             @endforeach
         </tbody>

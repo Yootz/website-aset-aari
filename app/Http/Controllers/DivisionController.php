@@ -32,4 +32,32 @@ class DivisionController extends Controller
 
         return redirect()->route('division.index')->with('success', 'Divisi berhasil ditambahkan!');
     }
+    // Form edit divisi
+    public function edit($id)
+    {
+        $division = Division::findOrFail($id);
+        return view('division.edit', compact('division'));
+    }
+
+    // Simpan perubahan divisi
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'd_name' => 'required',
+        ]);
+
+        $division = Division::findOrFail($id);
+        $division->update($request->all());
+
+        return redirect()->route('division.index')->with('success', 'Divisi berhasil diperbarui!');
+    }
+
+    // Hapus divisi
+    public function destroy($id)
+    {
+        $division = Division::findOrFail($id);
+        $division->delete();
+
+        return redirect()->route('division.index')->with('success', 'Divisi berhasil dihapus!');
+    }
 }

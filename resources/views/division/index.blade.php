@@ -22,6 +22,7 @@
                 <th>Kode Divisi</th>
                 <th>Nama Divisi</th>
                 <th>Keterangan</th>
+                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -30,6 +31,16 @@
                     <td>{{ $div->d_code }}</td>
                     <td>{{ $div->d_name }}</td>
                     <td>{{ $div->d_desc ?? '-' }}</td>
+                    <td>{{ $div->d_desc ?? '-' }}</td>
+                    <td>
+                        <a href="{{ route('division.edit', $div->d_code) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <form action="{{ route('division.destroy', $div->d_code) }}" method="POST" class="d-inline"
+                            onsubmit="return confirm('Yakin ingin menghapus divisi ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                        </form>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
