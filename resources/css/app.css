@@ -157,7 +157,7 @@ h1, h2, h3, .brand, .main-nav, .sidebar-label, .primary-button, .secondary-butto
 .stat-card-coral { color: #fff8f2; background: var(--coral); border-color: var(--coral); }
 .stat-label { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
 .stat-card strong { margin: 8px 0; font-size: 44px; line-height: 1; letter-spacing: -.07em; }
-.stat-link { font-size: 12px; font-weight: 800; }
+.stat-link { color: #ffffff; font-size: 12px; font-weight: 800; }
 .stat-link span { padding-left: 5px; font-size: 17px; }
 .dashboard-note { display: flex; flex-direction: column; justify-content: space-between; background: #e8f0e5; }
 .note-mark { color: var(--coral); font-size: 23px; }
@@ -269,7 +269,7 @@ h1, h2, h3, .brand, .main-nav, .sidebar-label, .primary-button, .secondary-butto
     .stat-card { color: var(--ink); }
     .stat-card-lime { background: var(--lime); border-color: var(--lime); }
     .stat-card-coral { background: var(--coral); border-color: var(--coral); }
-    .stat-link { color: var(--teal); }
+    .stat-link { color: #ffffff; }
     .dashboard-note { background: #1f3a34; }
     .dashboard-note p { color: var(--ink); }
     .note-mark { color: var(--coral); }
