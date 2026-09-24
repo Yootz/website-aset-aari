@@ -35,4 +35,34 @@ class EmployeeController extends Controller
 
         return redirect()->route('employee.index')->with('success', 'Data karyawan berhasil ditambahkan!');
     }
+    // Form edit karyawan
+    public function edit($id)
+    {
+        $employee = Employee::findOrFail($id);
+        $divisions = Division::all();
+        return view('employee.edit', compact('employee', 'divisions'));
+    }
+
+    // Simpan perubahan karyawan
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'e_name' => 'required',
+            'e_d_code' => 'required',
+        ]);
+
+        $employee = Employee::findOrFail($id);
+        $employee->update($request->all());
+
+        return redirect()->route('employee.index')->with('success', 'Data karyawan berhasil diperbarui!');
+    }
+
+    // Hapus karyawan
+    public function destroy($id)
+    {
+        $employee = Employee::findOrFail($id);
+        $employee->delete();
+
+        return redirect()->route('employee.index')->with('success', 'Data karyawan berhasil dihapus!');
+    }
 }
