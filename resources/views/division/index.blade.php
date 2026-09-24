@@ -1,50 +1,69 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <title>Daftar Divisi</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
+@section('title', 'Divisi | AARI')
 
-<body class="container mt-4">
-    <h2>Data Divisi</h2>
-    <a href="{{ route('division.create') }}" class="btn btn-primary mb-3">+ Tambah Divisi</a>
-    <a href="{{ route('employee.index') }}" class="btn btn-secondary mb-3 float-end">Kelola Karyawan</a>
+@section('content')
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Master data / Overview</p>
+            <h1>Struktur tim, lebih mudah dilihat.</h1>
+            <p>Kelola divisi yang menjadi dasar pembagian aset dan tanggung jawab di AARI.</p>
+        </div>
+        <a href="{{ route('division.create') }}" class="primary-button"><span class="button-symbol">+</span> Tambah divisi</a>
+    </div>
 
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="flash-message"><span>✓</span> {{ session('success') }}</div>
     @endif
 
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Kode Divisi</th>
-                <th>Nama Divisi</th>
-                <th>Keterangan</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($divisions as $div)
-                <tr>
-                    <td>{{ $div->d_code }}</td>
-                    <td>{{ $div->d_name }}</td>
-                    <td>{{ $div->d_desc ?? '-' }}</td>
-                    <td>{{ $div->d_desc ?? '-' }}</td>
-                    <td>
-                        <a href="{{ route('division.edit', $div->d_code) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('division.destroy', $div->d_code) }}" method="POST" class="d-inline"
-                            onsubmit="return confirm('Yakin ingin menghapus divisi ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-</body>
+    <section class="data-panel">
+        <div class="panel-head">
+            <div>
+                <h2 class="panel-title">Daftar divisi</h2>
+                <p class="panel-caption">Informasi unit kerja yang tersedia saat ini.</p>
+            </div>
+            <span class="count-badge">{{ $divisions->count() }} unit</span>
+        </div>
 
-</html>
+        @if($divisions->isEmpty())
+            <div class="empty-state">
+                <div class="empty-symbol">+</div>
+                <h3>Belum ada divisi</h3>
+                <p>Mulai dengan menambahkan divisi pertama untuk workspace ini.</p>
+                <a href="{{ route('division.create') }}" class="primary-button">Tambah divisi pertama</a>
+            </div>
+        @else
+            <div class="table-wrap">
+                <table class="division-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Kode</th>
+                            <th scope="col">Nama divisi</th>
+                            <th scope="col">Keterangan</th>
+                            <th scope="col" class="action-column">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($divisions as $div)
+                            <tr>
+                                <td><span class="code-chip">{{ $div->d_code }}</span></td>
+                                <td class="division-name">{{ $div->d_name }}</td>
+                                <td class="description">{{ $div->d_desc ?: 'Belum ada keterangan.' }}</td>
+                                <td class="action-column">
+                                    <div class="action-group">
+                                        <a href="{{ route('division.edit', $div->d_code) }}" class="action-link action-edit" aria-label="Edit {{ $div->d_name }}">Edit</a>
+                                        <form action="{{ route('division.destroy', $div->d_code) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus divisi ini? Data karyawan di dalamnya juga akan terhapus.')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="action-link action-delete" aria-label="Hapus {{ $div->d_name }}">Hapus</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
+    </section>
+@endsection

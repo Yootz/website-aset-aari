@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\DivisionController;
 
-Route::resource('employee', EmployeeController::class);
-Route::resource('division', DivisionController::class);
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+Route::resource('employee', EmployeeController::class)->except(['show']);
+Route::resource('division', DivisionController::class)->except(['show']);
