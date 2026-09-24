@@ -1,50 +1,69 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <title>Daftar Karyawan</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
+@section('title', 'Karyawan | AARI')
 
-<body class="container mt-4">
-    <h2>Data Karyawan</h2>
-    <a href="{{ route('employee.create') }}" class="btn btn-primary mb-3">+ Tambah Karyawan</a>
+@section('content')
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Master data / People</p>
+            <h1>Kenali orang di balik kerja.</h1>
+            <p>Kelola anggota tim dan hubungkan setiap orang dengan divisinya.</p>
+        </div>
+        <a href="{{ route('employee.create') }}" class="primary-button"><span class="button-symbol">+</span> Tambah karyawan</a>
+    </div>
 
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="flash-message"><span>✓</span> {{ session('success') }}</div>
     @endif
 
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Kode Karyawan</th>
-                <th>Nama Karyawan</th>
-                <th>Divisi</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($employees as $emp)
-                <tr>
-                    <td>{{ $emp->e_code }}</td>
-                    <td>{{ $emp->e_name }}</td>
-                    <td>{{ $emp->division->d_name ?? '-' }}</td>
-                    <td>{{ $emp->division->d_name ?? '-' }}</td>
-                    <td>
-                        <a href="{{ route('employee.edit', $emp->e_code) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('employee.destroy', $emp->e_code) }}" method="POST" class="d-inline"
-                            onsubmit="return confirm('Yakin ingin menghapus karyawan ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                        </form>
-                    </td>
+    <section class="data-panel">
+        <div class="panel-head">
+            <div>
+                <h2 class="panel-title">Daftar karyawan</h2>
+                <p class="panel-caption">Anggota tim yang terdaftar di workspace.</p>
+            </div>
+            <span class="count-badge">{{ $employees->count() }} orang</span>
+        </div>
 
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-</body>
-
-</html>
+        @if($employees->isEmpty())
+            <div class="empty-state">
+                <div class="empty-symbol">+</div>
+                <h3>Belum ada karyawan</h3>
+                <p>Tambahkan anggota tim pertama untuk mulai mengisi workspace.</p>
+                <a href="{{ route('employee.create') }}" class="primary-button">Tambah karyawan pertama</a>
+            </div>
+        @else
+            <div class="table-wrap">
+                <table class="division-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Kode</th>
+                            <th scope="col">Nama karyawan</th>
+                            <th scope="col">Divisi</th>
+                            <th scope="col" class="action-column">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($employees as $emp)
+                            <tr>
+                                <td><span class="code-chip">{{ $emp->e_code }}</span></td>
+                                <td class="division-name">{{ $emp->e_name }}</td>
+                                <td class="description">{{ $emp->division->d_name ?? 'Belum ditentukan' }}</td>
+                                <td class="action-column">
+                                    <div class="action-group">
+                                        <a href="{{ route('employee.edit', $emp->e_code) }}" class="action-link action-edit" aria-label="Edit {{ $emp->e_name }}">Edit</a>
+                                        <form action="{{ route('employee.destroy', $emp->e_code) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus karyawan ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="action-link action-delete" aria-label="Hapus {{ $emp->e_name }}">Hapus</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
+    </section>
+@endsection

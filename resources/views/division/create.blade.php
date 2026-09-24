@@ -1,42 +1,66 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Tambah Divisi</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body class="container mt-4">
-    <h2>Tambah Divisi Baru</h2>
-    <a href="{{ route('division.index') }}" class="btn btn-secondary mb-3">Kembali</a>
+@extends('layouts.app')
 
-    @if($errors->any())
-        <div class="alert alert-danger">
+@section('title', 'Tambah Divisi | AARI')
+
+@section('content')
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">Master data / Divisi</p>
+            <h1>Tambahkan divisi baru.</h1>
+            <p>Lengkapi identitas divisi agar pengelolaan aset dan karyawan tetap rapi.</p>
+        </div>
+        <a href="{{ route('division.index') }}" class="secondary-button"><span class="button-symbol">←</span> Kembali ke daftar</a>
+    </div>
+
+    <div class="form-layout">
+        <section class="form-panel">
+            <h2>Detail divisi</h2>
+            <p>Gunakan nama yang mudah dikenali oleh seluruh tim.</p>
+
+            @if($errors->any())
+                <div class="flash-message" style="border-color: #f2b6ad; color: #9e3b30; background: #fff0ed;">
+                    <span style="background: #f2b6ad;">!</span>
+                    <div>{{ $errors->first() }}</div>
+                </div>
+            @endif
+
+            <form action="{{ route('division.store') }}" method="POST">
+                @csrf
+                <div class="field">
+                    <label for="d_code">Kode divisi <span class="required">*</span></label>
+                    <input id="d_code" type="text" name="d_code" value="{{ old('d_code') }}" placeholder="Contoh: DIV004" required autofocus>
+                    <p class="field-hint">Kode harus unik, misalnya DIV004 atau OPS01.</p>
+                    @error('d_code') <p class="field-error">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="field">
+                    <label for="d_name">Nama divisi <span class="required">*</span></label>
+                    <input id="d_name" type="text" name="d_name" value="{{ old('d_name') }}" placeholder="Contoh: Operasional" required>
+                    @error('d_name') <p class="field-error">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="field">
+                    <label for="d_desc">Keterangan</label>
+                    <textarea id="d_desc" name="d_desc" placeholder="Deskripsi singkat tentang fungsi divisi (opsional)">{{ old('d_desc') }}</textarea>
+                    <p class="field-hint">Keterangan membantu tim memahami cakupan divisi.</p>
+                </div>
+
+                <div class="form-actions">
+                    <a href="{{ route('division.index') }}" class="secondary-button">Batal</a>
+                    <button type="submit" class="primary-button"><span class="button-symbol">+</span> Simpan divisi</button>
+                </div>
+            </form>
+        </section>
+
+        <aside class="form-note">
+            <div class="form-note-mark">✦</div>
+            <h3>Data yang rapi, kerja yang ringan.</h3>
+            <p>Setiap divisi menjadi rumah bagi aset dan karyawan yang terkait dengannya.</p>
             <ul>
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
+                <li>Pastikan kode belum pernah digunakan.</li>
+                <li>Gunakan nama divisi yang konsisten.</li>
+                <li>Tambahkan keterangan seperlunya.</li>
             </ul>
-        </div>
-    @endif
-
-    <form action="{{ route('division.store') }}" method="POST">
-        @csrf
-        <div class="mb-3">
-            <label class="form-label">Kode Divisi (d_code)</label>
-            <input type="text" name="d_code" class="form-control" placeholder="Contoh: DIV004" required>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Nama Divisi (d_name)</label>
-            <input type="text" name="d_name" class="form-control" placeholder="Contoh: Operasional" required>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Keterangan (d_desc)</label>
-            <textarea name="d_desc" class="form-control" rows="3" placeholder="Deskripsi singkat divisi (opsional)"></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-success">Simpan Divisi</button>
-    </form>
-</body>
-</html>
+        </aside>
+    </div>
+@endsection
