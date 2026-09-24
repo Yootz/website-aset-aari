@@ -6,9 +6,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\QRCodeController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
