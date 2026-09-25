@@ -14,6 +14,7 @@ return new class extends Migration
             $table->date('tgl_balik')->nullable();
             $table->string('e_code', 20);
             $table->text('p_desc')->nullable();
+            $table->string('p_status', 20)->default('pending');
             $table->foreign('e_code')->references('e_code')->on('master_employee')->onDelete('restrict');
             $table->timestamps();
         });
