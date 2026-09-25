@@ -31,6 +31,22 @@
                     <span class="nav-icon" aria-hidden="true">●</span>
                     <span>Karyawan</span>
                 </a>
+                <a href="{{ route('asset.index') }}" class="nav-link {{ request()->routeIs('asset.*') ? 'is-active' : '' }}" aria-label="Aset">
+                    <span class="nav-icon" aria-hidden="true">□</span>
+                    <span>Aset</span>
+                </a>
+                <a href="{{ route('peminjaman.index') }}" class="nav-link {{ request()->routeIs('peminjaman.*') ? 'is-active' : '' }}" aria-label="Peminjaman">
+                    <span class="nav-icon" aria-hidden="true">↗</span>
+                    <span>Peminjaman</span>
+                </a>
+                <a href="{{ route('peminjaman.monitoring') }}" class="nav-link {{ request()->routeIs('peminjaman.monitoring') ? 'is-active' : '' }}" aria-label="Monitoring peminjaman">
+                    <span class="nav-icon" aria-hidden="true">◌</span>
+                    <span>Monitoring</span>
+                </a>
+                <a href="{{ route('createqr.index') }}" class="nav-link {{ request()->routeIs('createqr.*') ? 'is-active' : '' }}" aria-label="QR aset">
+                    <span class="nav-icon" aria-hidden="true">⌁</span>
+                    <span>QR aset</span>
+                </a>
             </nav>
 
             <div class="sidebar-footer">

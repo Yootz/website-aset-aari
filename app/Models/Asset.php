@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Asset extends Model
 {
@@ -21,4 +22,9 @@ class Asset extends Model
         'a_desc',
         'a_status',
     ];
+
+    public function details(): HasMany
+    {
+        return $this->hasMany(DetailPeminjaman::class, 'a_code', 'a_code');
+    }
 }

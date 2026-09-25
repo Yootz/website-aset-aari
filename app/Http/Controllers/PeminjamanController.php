@@ -3,15 +3,68 @@
 namespace App\Http\Controllers;
 
 use App\Models\Asset;
+use App\Models\Employee;
 use App\Models\Peminjaman;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class PeminjamanController extends Controller
 {
+    public function create(): View
+    {
+        $employees = Employee::query()->orderBy('e_name')->get();
+        $assets = Asset::query()
+            ->whereRaw('LOWER(a_status) = ?', ['available'])
+            ->orderBy('a_code')
+            ->get();
+
+        return view('peminjaman.create', compact('employees', 'assets'));
+    }
+
+    public function storeWeb(Request $request): RedirectResponse
+    {
+        $this->store($request);
+
+        return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil dibuat.');
+    }
+
+    public function webIndex(): View
+    {
+        $peminjaman = Peminjaman::with(['employee', 'details.asset'])
+            ->latest('created_at')
+            ->get();
+
+        return view('peminjaman.index', compact('peminjaman'));
+    }
+
+    public function monitoring(): View
+    {
+        $peminjaman = Peminjaman::with(['employee', 'details.asset'])
+            ->latest('created_at')
+            ->get();
+
+        return view('peminjaman.monitoring', compact('peminjaman'));
+    }
+
+    public function updateStatusWeb(Request $request, Peminjaman $peminjaman): RedirectResponse
+    {
+        $this->updateStatus($request, $peminjaman);
+
+        return redirect()->route('peminjaman.monitoring')->with('success', 'Status peminjaman berhasil diperbarui.');
+    }
+
+    public function show(Peminjaman $peminjaman): View
+    {
+        $peminjaman->load(['employee.division', 'details.asset']);
+
+        return view('peminjaman.show', compact('peminjaman'));
+    }
+
     public function index(): JsonResponse
     {
         return response()->json([
@@ -43,7 +96,7 @@ class PeminjamanController extends Controller
                 ->keyBy('a_code');
 
             $unavailableAssets = collect($assetCodes)
-                ->filter(fn (string $assetCode): bool => ! isset($assets[$assetCode]) || $assets[$assetCode]->a_status !== 'available')
+                ->filter(fn (string $assetCode): bool => ! isset($assets[$assetCode]) || strtolower(trim((string) $assets[$assetCode]->a_status)) !== 'available')
                 ->values();
 
             if ($unavailableAssets->isNotEmpty()) {
@@ -92,8 +145,8 @@ class PeminjamanController extends Controller
             'p_status' => ['required', Rule::in(['pending', 'approved', 'returned', 'rejected'])],
         ]);
 
-        if ($validated['p_status'] === 'returned') {
-            return $this->returnAsset($peminjaman);
+        if (in_array($validated['p_status'], ['returned', 'rejected'], true)) {
+            return $this->returnAsset($peminjaman, $validated['p_status']);
         }
 
         $peminjaman->update(['p_status' => $validated['p_status']]);
@@ -104,7 +157,7 @@ class PeminjamanController extends Controller
         ]);
     }
 
-    public function returnAsset(Peminjaman $peminjaman): JsonResponse
+    public function returnAsset(Peminjaman $peminjaman, string $status = 'returned'): JsonResponse
     {
         DB::beginTransaction();
 
@@ -122,7 +175,7 @@ class PeminjamanController extends Controller
                 $assets[$detail->a_code]->update(['a_status' => 'available']);
             }
 
-            $peminjaman->update(['p_status' => 'returned']);
+            $peminjaman->update(['p_status' => $status]);
             DB::commit();
 
             return response()->json([

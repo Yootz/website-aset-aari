@@ -27,6 +27,11 @@
             <strong>{{ $employeeCount }}</strong>
             <span class="stat-link">Lihat karyawan <span>↗</span></span>
         </a>
+        <a href="{{ route('asset.index') }}" class="stat-card stat-card-teal">
+            <span class="stat-label">Total aset</span>
+            <strong>{{ $assetCount }}</strong>
+            <span class="stat-link">Lihat aset <span>↗</span></span>
+        </a>
         <div class="dashboard-note">
             <span class="note-mark">✦</span>
             <p>Data yang terorganisir membuat setiap keputusan terasa lebih ringan.</p>
@@ -54,6 +59,27 @@
                 <span class="feature-icon feature-icon-coral">●</span>
                 <h3>Kelola karyawan</h3>
                 <p>Tambahkan anggota tim dan hubungkan mereka dengan divisinya.</p>
+                <span class="feature-arrow">Buka fitur <strong>→</strong></span>
+            </a>
+            <a href="{{ route('asset.index') }}" class="feature-card">
+                <span class="feature-number">03</span>
+                <span class="feature-icon feature-icon-teal">□</span>
+                <h3>Kelola aset</h3>
+                <p>Lihat status aset dan telusuri riwayat peminjaman setiap item.</p>
+                <span class="feature-arrow">Buka fitur <strong>→</strong></span>
+            </a>
+            <a href="{{ route('peminjaman.index') }}" class="feature-card">
+                <span class="feature-number">04</span>
+                <span class="feature-icon feature-icon-coral">↗</span>
+                <h3>Monitor peminjaman</h3>
+                <p>Periksa daftar transaksi dan detail aset yang sedang dipinjam.</p>
+                <span class="feature-arrow">Buka fitur <strong>→</strong></span>
+            </a>
+            <a href="{{ route('createqr.index') }}" class="feature-card">
+                <span class="feature-number">05</span>
+                <span class="feature-icon">⌁</span>
+                <h3>Buat QR aset</h3>
+                <p>Generate QR code untuk memudahkan akses informasi setiap aset.</p>
                 <span class="feature-arrow">Buka fitur <strong>→</strong></span>
             </a>
         </div>
