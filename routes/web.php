@@ -22,4 +22,4 @@ Route::patch('peminjaman/{peminjaman}/status', [PeminjamanController::class, 'up
 Route::get('peminjaman/{peminjaman}', [PeminjamanController::class, 'show'])->name('peminjaman.show');
 Route::get('asset', [AssetController::class, 'index'])->name('asset.index');
 Route::get('asset/{asset}', [AssetController::class, 'show'])->name('asset.show');
-Route::get('aset', [AssetController::class, 'lookup'])->name('asset.lookup');
+Route::get('asset/{a_code}', [AssetController::class, 'lookup'])->name('asset.lookup');
