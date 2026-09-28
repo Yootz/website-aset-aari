@@ -12,7 +12,7 @@
         <a href="{{ route('employee.index') }}" class="secondary-button"><span class="button-symbol">←</span> Kembali ke daftar</a>
     </div>
 
-    <div class="form-layout">
+
         <section class="form-panel">
             <h2>Edit detail karyawan</h2>
             <p>Kode karyawan adalah identitas tetap dan tidak dapat diubah.</p>
@@ -57,15 +57,6 @@
             </form>
         </section>
 
-        <aside class="form-note">
-            <div class="form-note-mark">✦</div>
-            <h3>Perubahan kecil tetap berarti.</h3>
-            <p>Jaga informasi tim tetap akurat agar dashboard selalu bisa dipercaya.</p>
-            <ul>
-                <li>Periksa nama sebelum menyimpan.</li>
-                <li>Pastikan divisi sudah sesuai.</li>
-                <li>Kode karyawan tetap tidak berubah.</li>
-            </ul>
-        </aside>
-    </div>
+
+
 @endsection

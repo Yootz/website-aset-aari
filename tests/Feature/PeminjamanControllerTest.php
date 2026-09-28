@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -90,6 +91,7 @@ class PeminjamanControllerTest extends TestCase
         ]);
 
         $peminjamanCode = $createResponse->json('data.p_code');
+        $this->actingAs(User::factory()->admin()->create());
 
         $response = $this->postJson("/api/peminjaman/{$peminjamanCode}/return");
 

@@ -12,7 +12,7 @@
         <a href="{{ route('division.index') }}" class="secondary-button"><span class="button-symbol">←</span> Kembali ke daftar</a>
     </div>
 
-    <div class="form-layout">
+
         <section class="form-panel">
             <h2>Detail divisi</h2>
             <p>Gunakan nama yang mudah dikenali oleh seluruh tim.</p>
@@ -51,16 +51,4 @@
                 </div>
             </form>
         </section>
-
-        <aside class="form-note">
-            <div class="form-note-mark">✦</div>
-            <h3>Data yang rapi, kerja yang ringan.</h3>
-            <p>Setiap divisi menjadi rumah bagi aset dan karyawan yang terkait dengannya.</p>
-            <ul>
-                <li>Pastikan kode belum pernah digunakan.</li>
-                <li>Gunakan nama divisi yang konsisten.</li>
-                <li>Tambahkan keterangan seperlunya.</li>
-            </ul>
-        </aside>
-    </div>
 @endsection

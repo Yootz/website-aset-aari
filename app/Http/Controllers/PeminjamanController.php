@@ -23,7 +23,13 @@ class PeminjamanController extends Controller
             ->orderBy('a_code')
             ->get();
 
-        return view('peminjaman.create', compact('employees', 'assets'));
+        $selectedAssetCode = request()->query('a_code');
+
+        if (! $assets->contains('a_code', $selectedAssetCode)) {
+            $selectedAssetCode = null;
+        }
+
+        return view('peminjaman.create', compact('employees', 'assets', 'selectedAssetCode'));
     }
 
     public function storeWeb(Request $request): RedirectResponse

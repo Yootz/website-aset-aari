@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Asset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class AssetController extends Controller
@@ -14,6 +15,26 @@ class AssetController extends Controller
         $assets = Asset::withCount('details')->orderBy('a_code')->get();
 
         return view('asset.index', compact('assets'));
+    }
+
+    public function create(): View
+    {
+        return view('asset.create');
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'a_code' => ['required', 'string', 'max:255', 'unique:master_aset,a_code'],
+            'a_name' => ['required', 'string', 'max:255'],
+            'a_type' => ['required', 'string', 'max:255'],
+            'a_desc' => ['required', 'string', 'max:255'],
+            'a_status' => ['required', Rule::in(['available', 'unavailable'])],
+        ]);
+
+        Asset::create($validated);
+
+        return redirect()->route('asset.index')->with('success', 'Aset berhasil ditambahkan.');
     }
 
     public function show(Asset $asset): View

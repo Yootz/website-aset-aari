@@ -20,7 +20,7 @@
             </div>
             <div class="table-wrap">
                 <table class="division-table">
-                    <thead><tr><th scope="col">Peminjaman</th><th scope="col">Peminjam</th><th scope="col">Tanggal</th><th scope="col">Status</th><th scope="col" class="action-column">Aksi</th></tr></thead>
+                    <thead><tr><th scope="col">Peminjaman</th><th scope="col">Peminjam</th><th scope="col">Tanggal</th><th scope="col">Status</th>@if(auth()->user()?->is_admin)<th scope="col" class="action-column">Aksi</th>@endif</tr></thead>
                     <tbody>
                         @forelse($asset->details as $detail)
                             <tr>
@@ -28,10 +28,12 @@
                                 <td class="division-name">{{ $detail->peminjaman?->employee?->e_name ?? '-' }}</td>
                                 <td>{{ $detail->peminjaman?->tgl_pinjam?->format('d M Y') ?? '-' }}</td>
                                 <td><span class="status-chip status-{{ $detail->dt_status }}">{{ ucfirst($detail->dt_status) }}</span></td>
-                                <td class="action-column"><a href="{{ route('peminjaman.show', $detail->p_code) }}" class="action-link action-edit">Detail</a></td>
+                                @if(auth()->user()?->is_admin)
+                                    <td class="action-column"><a href="{{ route('peminjaman.show', $detail->p_code) }}" class="action-link action-edit">Detail</a></td>
+                                @endif
                             </tr>
                         @empty
-                            <tr><td colspan="5" class="description">Aset ini belum pernah tercatat dalam peminjaman.</td></tr>
+                            <tr><td colspan="{{ auth()->user()?->is_admin ? 5 : 4 }}" class="description">Aset ini belum pernah tercatat dalam peminjaman.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -48,7 +50,12 @@
                     <div><dt>Deskripsi</dt><dd>{{ $asset->a_desc ?: 'Tidak ada deskripsi.' }}</dd></div>
                     <div><dt>Status saat ini</dt><dd>{{ ucfirst($asset->a_status) }}</dd></div>
                 </dl>
-                <a href="{{ route('createqr.index', ['a_code' => $asset->a_code]) }}" class="secondary-button detail-button">Generate QR aset</a>
+                @if(auth()->user()?->is_admin)
+                    <a href="{{ route('createqr.index', ['a_code' => $asset->a_code]) }}" class="secondary-button detail-button">Generate QR aset</a>
+                @endif
+                @if(strtolower(trim($asset->a_status)) === 'available')
+                    <a href="{{ route('peminjaman.create', ['a_code' => $asset->a_code]) }}" class="secondary-button detail-button">Pinjam Aset</a>
+                @endif
             </div>
         </aside>
     </section>

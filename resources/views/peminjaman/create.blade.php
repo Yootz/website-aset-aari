@@ -9,10 +9,9 @@
             <h1>Catat peminjaman baru.</h1>
             <p>Pilih karyawan, jadwal peminjaman, dan aset yang akan dibawa keluar dari inventaris.</p>
         </div>
-        <a href="{{ route('peminjaman.index') }}" class="secondary-button"><span class="button-symbol"><-</span> Kembali</a>
+        <a href="{{ auth()->user()?->is_admin ? route('peminjaman.index') : route('asset.index') }}" class="secondary-button"><span class="button-symbol"><-</span> Kembali</a>
     </div>
 
-    <div class="form-layout">
         <section class="form-panel">
             <h2>Detail peminjaman</h2>
             <p>Aset yang dipilih akan berubah menjadi unavailable setelah transaksi disimpan.</p>
@@ -28,7 +27,11 @@
                 <div class="dashboard-empty">
                     @if($employees->isEmpty())
                         Tambahkan karyawan terlebih dahulu sebelum membuat peminjaman.
-                        <a href="{{ route('employee.create') }}">Tambah karyawan -></a>
+                        @if(auth()->user()?->is_admin)
+                            <a href="{{ route('employee.create') }}">Tambah karyawan -></a>
+                        @else
+                            Hubungi admin untuk menambahkan karyawan.
+                        @endif
                     @elseif($assets->isEmpty())
                         Tidak ada aset available yang dapat dipinjam saat ini.
                         <a href="{{ route('asset.index') }}">Lihat daftar aset -></a>
@@ -73,7 +76,9 @@
                                 <select id="asset-select-0" name="details[0][a_code]" required>
                                     <option value="">Pilih aset available</option>
                                     @foreach($assets as $asset)
-                                        <option value="{{ $asset->a_code }}">{{ $asset->a_code }} - {{ $asset->a_name }}</option>
+                                        <option value="{{ $asset->a_code }}" @selected(old('details.0.a_code', $selectedAssetCode) === $asset->a_code)>
+                                            {{ $asset->a_code }} - {{ $asset->a_name }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 <input type="hidden" name="details[0][dt_qty]" value="1">
@@ -86,24 +91,14 @@
                     </div>
 
                     <div class="form-actions">
-                        <a href="{{ route('peminjaman.index') }}" class="secondary-button">Batal</a>
+                        <a href="{{ auth()->user()?->is_admin ? route('peminjaman.index') : route('asset.index') }}" class="secondary-button">Batal</a>
                         <button type="submit" class="primary-button"><span class="button-symbol">+</span> Simpan peminjaman</button>
                     </div>
                 </form>
             @endif
         </section>
 
-        <aside class="form-note">
-            <div class="form-note-mark">↗</div>
-            <h3>Jaga alur aset tetap terbaca.</h3>
-            <p>Setiap aset hanya bisa dipinjam satu kali ketika statusnya available.</p>
-            <ul>
-                <li>Pilih karyawan yang bertanggung jawab.</li>
-                <li>Pastikan rencana pengembalian benar.</li>
-                <li>Gunakan detail untuk kebutuhan khusus.</li>
-            </ul>
-        </aside>
-    </div>
+
 
     @if(!$employees->isEmpty() && !$assets->isEmpty())
         <script>

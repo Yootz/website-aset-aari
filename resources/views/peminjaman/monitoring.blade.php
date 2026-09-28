@@ -6,8 +6,8 @@
     <div class="page-heading">
         <div>
             <p class="eyebrow">Asset operations / Monitoring</p>
-            <h1>Pastikan setiap peminjaman bergerak.</h1>
-            <p>Perbarui status transaksi dan pantau aset yang masih berada di luar inventaris.</p>
+            <h1>Monitoring Peminjaman</h1>
+            <p>Kelola dan pantau status transaksi peminjaman aset dalam sistem manajemen AARI.</p>
         </div>
         <a href="{{ route('peminjaman.create') }}" class="primary-button"><span class="button-symbol">+</span> Buat peminjaman</a>
     </div>

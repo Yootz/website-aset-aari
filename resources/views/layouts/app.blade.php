@@ -6,10 +6,11 @@
     <title>@yield('title', 'AARI')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
+<body class="@yield('body-class')">
+    @php($isAdmin = auth()->user()?->is_admin ?? false)
     <div class="app-shell">
         <aside class="sidebar">
-            <a href="{{ route('dashboard') }}" class="brand" aria-label="AARI home">
+            <a href="{{ $isAdmin ? route('dashboard') : route('asset.index') }}" class="brand" aria-label="AARI home">
                 <span class="brand-mark">A</span>
                 <span>
                     <strong>AARI</strong>
@@ -19,10 +20,12 @@
 
             <div class="sidebar-label">Workspace</div>
             <nav class="main-nav" aria-label="Navigasi utama">
-                <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'is-active' : '' }}" aria-label="Dashboard">
-                    <span class="nav-icon" aria-hidden="true">▦</span>
-                    <span>Dashboard</span>
-                </a>
+                @if($isAdmin)
+                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'is-active' : '' }}" aria-label="Dashboard">
+                        <span class="nav-icon" aria-hidden="true">▦</span>
+                        <span>Dashboard</span>
+                    </a>
+                @endif
                 <a href="{{ route('division.index') }}" class="nav-link {{ request()->routeIs('division.*') ? 'is-active' : '' }}" aria-label="Divisi">
                     <span class="nav-icon" aria-hidden="true">◆</span>
                     <span>Divisi</span>
@@ -35,18 +38,29 @@
                     <span class="nav-icon" aria-hidden="true">□</span>
                     <span>Aset</span>
                 </a>
-                <a href="{{ route('peminjaman.index') }}" class="nav-link {{ request()->routeIs('peminjaman.*') ? 'is-active' : '' }}" aria-label="Peminjaman">
-                    <span class="nav-icon" aria-hidden="true">↗</span>
-                    <span>Peminjaman</span>
-                </a>
-                <a href="{{ route('peminjaman.monitoring') }}" class="nav-link {{ request()->routeIs('peminjaman.monitoring') ? 'is-active' : '' }}" aria-label="Monitoring peminjaman">
-                    <span class="nav-icon" aria-hidden="true">◌</span>
-                    <span>Monitoring</span>
-                </a>
-                <a href="{{ route('createqr.index') }}" class="nav-link {{ request()->routeIs('createqr.*') ? 'is-active' : '' }}" aria-label="QR aset">
-                    <span class="nav-icon" aria-hidden="true">⌁</span>
-                    <span>QR aset</span>
-                </a>
+                @if($isAdmin)
+                    <a href="{{ route('peminjaman.index') }}" class="nav-link {{ request()->routeIs('peminjaman.index') ? 'is-active' : '' }}" aria-label="Peminjaman">
+                        <span class="nav-icon" aria-hidden="true">↗</span>
+                        <span>Peminjaman</span>
+                    </a>
+                    <a href="{{ route('peminjaman.monitoring') }}" class="nav-link {{ request()->routeIs('peminjaman.monitoring') ? 'is-active' : '' }}" aria-label="Monitoring peminjaman">
+                        <span class="nav-icon" aria-hidden="true">◌</span>
+                        <span>Monitoring</span>
+                    </a>
+                    <a href="{{ route('laporan.peminjaman.bulanan') }}" class="nav-link {{ request()->routeIs('laporan.*') ? 'is-active' : '' }}" aria-label="Laporan peminjaman bulanan">
+                        <span class="nav-icon" aria-hidden="true">▤</span>
+                        <span>Laporan</span>
+                    </a>
+                    <a href="{{ route('createqr.index') }}" class="nav-link {{ request()->routeIs('createqr.*') ? 'is-active' : '' }}" aria-label="QR aset">
+                        <span class="nav-icon" aria-hidden="true">⌁</span>
+                        <span>QR aset</span>
+                    </a>
+                @else
+                    <a href="{{ route('peminjaman.create') }}" class="nav-link {{ request()->routeIs('peminjaman.create') ? 'is-active' : '' }}" aria-label="Buat peminjaman">
+                        <span class="nav-icon" aria-hidden="true">↗</span>
+                        <span>Pinjam aset</span>
+                    </a>
+                @endif
             </nav>
 
             <div class="sidebar-footer">
@@ -57,7 +71,17 @@
 
         <main class="main-content">
             <header class="topbar">
-                <div class="topbar-meta">2026 <span class="meta-divider"></span> Internal</div>
+                <div class="topbar-actions">
+                    @if($isAdmin)
+                        <span class="topbar-meta">Admin <span class="meta-divider"></span> Workspace aktif</span>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="secondary-button topbar-auth-button">Keluar</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="secondary-button topbar-auth-button">Login admin</a>
+                    @endif
+                </div>
             </header>
 
             <div class="page-content">

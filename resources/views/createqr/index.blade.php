@@ -6,10 +6,12 @@
     <div class="page-heading">
         <div>
             <p class="eyebrow">Asset operations / QR</p>
-            <h1>Berikan setiap aset pintu masuknya.</h1>
+            <h1>QR Code Generator</h1>
             <p>Generate QR code yang mengarah langsung ke detail aset dan riwayat peminjamannya.</p>
         </div>
-        <button type="button" class="primary-button no-print" onclick="window.print()"><span class="button-symbol">+</span> Print QR</button>
+        @if ($selectedAsset)
+            <button id="downloadQrPng" type="button" class="primary-button no-print" data-asset-code="{{ $selectedAsset->a_code }}" disabled><span class="button-symbol" aria-hidden="true">↓</span> Unduh PNG</button>
+        @endif
     </div>
 
     <section class="qr-layout">
