@@ -49,6 +49,7 @@
                     <div><dt>Status saat ini</dt><dd>{{ ucfirst($asset->a_status) }}</dd></div>
                 </dl>
                 <a href="{{ route('createqr.index', ['a_code' => $asset->a_code]) }}" class="secondary-button detail-button">Generate QR aset</a>
+                <a href="{{ route('peminjaman.create', ['a_code' => $asset->a_code]) }}" class="secondary-button detail-button">Pinjam Aset</a>
             </div>
         </aside>
     </section>

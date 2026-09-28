@@ -6,8 +6,8 @@
     <div class="page-heading">
         <div>
             <p class="eyebrow">Master data / People</p>
-            <h1>Kenali orang di balik kerja.</h1>
-            <p>Kelola anggota tim dan hubungkan setiap orang dengan divisinya.</p>
+            <h1>Daftar Karyawan</h1>
+            <p>Kelola anggota karyawan dalam sistem manajemen aset.</p>
         </div>
         <a href="{{ route('employee.create') }}" class="primary-button"><span class="button-symbol">+</span> Tambah karyawan</a>
     </div>
@@ -20,7 +20,6 @@
         <div class="panel-head">
             <div>
                 <h2 class="panel-title">Daftar karyawan</h2>
-                <p class="panel-caption">Anggota tim yang terdaftar di workspace.</p>
             </div>
             <span class="count-badge">{{ $employees->count() }} orang</span>
         </div>

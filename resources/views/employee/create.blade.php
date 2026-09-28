@@ -12,7 +12,7 @@
         <a href="{{ route('employee.index') }}" class="secondary-button"><span class="button-symbol">←</span> Kembali ke daftar</a>
     </div>
 
-    <div class="form-layout">
+
         <section class="form-panel">
             <h2>Detail karyawan</h2>
             <p>Gunakan identitas yang sesuai dengan data internal tim.</p>
@@ -58,15 +58,5 @@
             </form>
         </section>
 
-        <aside class="form-note">
-            <div class="form-note-mark">✦</div>
-            <h3>Tim yang terhubung, kerja yang terbaca.</h3>
-            <p>Relasikan setiap karyawan ke divisi yang tepat agar informasi lebih mudah ditemukan.</p>
-            <ul>
-                <li>Gunakan kode karyawan yang konsisten.</li>
-                <li>Tulis nama lengkap tanpa singkatan.</li>
-                <li>Pilih divisi sesuai tanggung jawab.</li>
-            </ul>
-        </aside>
-    </div>
+
 @endsection

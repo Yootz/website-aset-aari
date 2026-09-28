@@ -6,8 +6,8 @@
     <div class="page-heading">
         <div>
             <p class="eyebrow">Master data / Overview</p>
-            <h1>Struktur tim, lebih mudah dilihat.</h1>
-            <p>Kelola divisi yang menjadi dasar pembagian aset dan tanggung jawab di AARI.</p>
+            <h1>Daftar Divisi</h1>
+            <p>Kelola divisi dalam sistem manajemen aset.</p>
         </div>
         <a href="{{ route('division.create') }}" class="primary-button"><span class="button-symbol">+</span> Tambah divisi</a>
     </div>
@@ -20,7 +20,6 @@
         <div class="panel-head">
             <div>
                 <h2 class="panel-title">Daftar divisi</h2>
-                <p class="panel-caption">Informasi unit kerja yang tersedia saat ini.</p>
             </div>
             <span class="count-badge">{{ $divisions->count() }} unit</span>
         </div>

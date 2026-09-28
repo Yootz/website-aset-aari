@@ -6,7 +6,7 @@
     <title>@yield('title', 'AARI')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
+<body class="@yield('body-class')">
     <div class="app-shell">
         <aside class="sidebar">
             <a href="{{ route('dashboard') }}" class="brand" aria-label="AARI home">
@@ -42,6 +42,10 @@
                 <a href="{{ route('peminjaman.monitoring') }}" class="nav-link {{ request()->routeIs('peminjaman.monitoring') ? 'is-active' : '' }}" aria-label="Monitoring peminjaman">
                     <span class="nav-icon" aria-hidden="true">◌</span>
                     <span>Monitoring</span>
+                </a>
+                <a href="{{ route('laporan.peminjaman.bulanan') }}" class="nav-link {{ request()->routeIs('laporan.*') ? 'is-active' : '' }}" aria-label="Laporan peminjaman bulanan">
+                    <span class="nav-icon" aria-hidden="true">▤</span>
+                    <span>Laporan</span>
                 </a>
                 <a href="{{ route('createqr.index') }}" class="nav-link {{ request()->routeIs('createqr.*') ? 'is-active' : '' }}" aria-label="QR aset">
                     <span class="nav-icon" aria-hidden="true">⌁</span>

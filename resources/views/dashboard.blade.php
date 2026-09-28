@@ -6,8 +6,8 @@
     <section class="dashboard-hero">
         <div>
             <p class="eyebrow">Workspace overview</p>
-            <h1>Selamat datang di <em>AARI.</em></h1>
-            <p class="hero-copy">Satu ruang untuk melihat struktur tim dan menjaga data operasional tetap terarah.</p>
+            <h1>Dashboard Manajemen Aset <em>AARI.</em></h1>
+            <p class="hero-copy">Sistem terpusat untuk manajemen aset</p>
         </div>
         <div class="hero-orbit" aria-hidden="true">
             <span class="orbit-line orbit-line-one"></span>
@@ -32,17 +32,12 @@
             <strong>{{ $assetCount }}</strong>
             <span class="stat-link">Lihat aset <span>↗</span></span>
         </a>
-        <div class="dashboard-note">
-            <span class="note-mark">✦</span>
-            <p>Data yang terorganisir membuat setiap keputusan terasa lebih ringan.</p>
-        </div>
     </section>
 
     <section class="dashboard-section">
         <div class="section-heading">
             <div>
                 <p class="eyebrow">Quick access</p>
-                <h2>Mulai dari mana?</h2>
             </div>
             <span class="section-rule"></span>
         </div>
@@ -89,7 +84,7 @@
         <div class="section-heading">
             <div>
                 <p class="eyebrow">Team structure</p>
-                <h2>Komposisi divisi</h2>
+                <h2>Divisi</h2>
             </div>
             <a href="{{ route('division.index') }}" class="text-link">Lihat semua <span>↗</span></a>
         </div>

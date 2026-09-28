@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\MonthlyLoanReportController;
 use App\Http\Controllers\PeminjamanController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/laporan/peminjaman/bulanan', MonthlyLoanReportController::class)
+    ->name('api.laporan.peminjaman.bulanan');
 
 Route::prefix('peminjaman')->name('api.peminjaman.')->group(function () {
     Route::get('/', [PeminjamanController::class, 'index'])->name('index');

@@ -22,8 +22,9 @@ class PeminjamanController extends Controller
             ->whereRaw('LOWER(a_status) = ?', ['available'])
             ->orderBy('a_code')
             ->get();
-
-        return view('peminjaman.create', compact('employees', 'assets'));
+        
+        $selectedAssetCode = request()->query('a_code');
+        return view('peminjaman.create', compact('employees', 'assets', 'selectedAssetCode'));
     }
 
     public function storeWeb(Request $request): RedirectResponse

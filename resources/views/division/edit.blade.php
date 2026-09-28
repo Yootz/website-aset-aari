@@ -12,7 +12,7 @@
         <a href="{{ route('division.index') }}" class="secondary-button"><span class="button-symbol">←</span> Kembali ke daftar</a>
     </div>
 
-    <div class="form-layout">
+
         <section class="form-panel">
             <h2>Edit detail divisi</h2>
             <p>Kode divisi adalah identitas tetap dan tidak dapat diubah.</p>
@@ -53,15 +53,6 @@
             </form>
         </section>
 
-        <aside class="form-note">
-            <div class="form-note-mark">✦</div>
-            <h3>Struktur yang selalu relevan.</h3>
-            <p>Deskripsi yang jelas membantu seluruh tim memahami fungsi divisi.</p>
-            <ul>
-                <li>Gunakan nama divisi yang konsisten.</li>
-                <li>Perbarui keterangan bila fungsi berubah.</li>
-                <li>Kode divisi tetap tidak berubah.</li>
-            </ul>
-        </aside>
-    </div>
+
+
 @endsection

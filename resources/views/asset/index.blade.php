@@ -6,11 +6,18 @@
     <div class="page-heading">
         <div>
             <p class="eyebrow">Asset operations / Inventory</p>
-            <h1>Kenali setiap aset yang bergerak.</h1>
-            <p>Lihat status aset, buka detailnya, dan telusuri siapa yang pernah meminjamnya.</p>
+            <h1>Daftar Aset</h1>
+            <p>Kelola inventaris aset yang terdaftar di sistem manajemen AARI.</p>
         </div>
-        <a href="{{ route('createqr.index') }}" class="primary-button"><span class="button-symbol">⌁</span> Buat QR aset</a>
+        <div class="heading-actions">
+            <a href="{{ route('asset.create') }}" class="primary-button"><span class="button-symbol">+</span> Tambah aset</a>
+            <a href="{{ route('createqr.index') }}" class="secondary-button"><span class="button-symbol">⌁</span> Buat QR aset</a>
+        </div>
     </div>
+
+    @if(session('success'))
+        <div class="flash-message"><span>✓</span> {{ session('success') }}</div>
+    @endif
 
     <section class="data-panel">
         <div class="panel-head">
