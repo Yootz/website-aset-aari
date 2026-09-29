@@ -1,6 +1,105 @@
 import QRCode from 'qrcode';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+
+const sweetAlerts = Swal.mixin({
+    buttonsStyling: true,
+    customClass: {
+        popup: 'aari-swal-popup',
+        title: 'aari-swal-title',
+        htmlContainer: 'aari-swal-content',
+        confirmButton: 'aari-swal-confirm',
+        cancelButton: 'aari-swal-cancel',
+    },
+    confirmButtonColor: '#015624',
+    cancelButtonColor: '#496351',
+});
+
+const showAlert = (options) => sweetAlerts.fire(options);
+
+window.AARIAlerts = {
+    show: showAlert,
+    success: (message, title = 'Berhasil') => showAlert({ icon: 'success', title, text: message, confirmButtonText: 'Tutup' }),
+    error: (message, title = 'Terjadi kesalahan') => showAlert({ icon: 'error', title, text: message, confirmButtonText: 'Tutup' }),
+};
+
+const queuedAlerts = window.__aariAlertsQueue || [];
+delete window.__aariAlertsQueue;
+queuedAlerts.forEach((alert) => showAlert(alert));
+
+document.addEventListener('aari:notify', (event) => {
+    showAlert(event.detail);
+});
+
+document.addEventListener('submit', async (event) => {
+    const form = event.target;
+
+    if (!(form instanceof HTMLFormElement) || !form.hasAttribute('data-swal-confirm')) {
+        return;
+    }
+
+    if (form.dataset.swalConfirmed === 'true') {
+        delete form.dataset.swalConfirmed;
+        return;
+    }
+
+    event.preventDefault();
+
+    if (form.dataset.swalPending === 'true') {
+        return;
+    }
+
+    form.dataset.swalPending = 'true';
+    const submitter = event.submitter;
+    const confirmation = await showAlert({
+        icon: form.dataset.swalIcon || 'warning',
+        title: form.dataset.swalTitle || 'Konfirmasi tindakan',
+        text: form.dataset.swalText || 'Apakah Anda yakin ingin melanjutkan?',
+        showCancelButton: true,
+        confirmButtonText: form.dataset.swalConfirmText || 'Ya, lanjutkan',
+        cancelButtonText: form.dataset.swalCancelText || 'Batal',
+        confirmButtonColor: form.dataset.swalConfirmColor || '#015624',
+        reverseButtons: true,
+        focusCancel: true,
+    });
+
+    delete form.dataset.swalPending;
+
+    if (confirmation.isConfirmed) {
+        form.dataset.swalConfirmed = 'true';
+
+        if (submitter instanceof HTMLElement) {
+            form.requestSubmit(submitter);
+        } else {
+            form.requestSubmit();
+        }
+    }
+}, true);
 
 document.addEventListener('DOMContentLoaded', () => {
+    const flashNotices = [...document.querySelectorAll('.flash-message')];
+    const fieldErrors = [...document.querySelectorAll('.field-error')];
+    const noticeMessages = flashNotices.map((notice) => {
+        const message = notice.cloneNode(true);
+        message.querySelector('span')?.remove();
+        return message.textContent.trim();
+    });
+    const validationMessages = fieldErrors.map((error) => error.textContent.trim());
+    const messages = [...new Set([...noticeMessages, ...validationMessages].filter(Boolean))];
+    const isError = fieldErrors.length > 0 || flashNotices.some((notice) => notice.dataset.swalType === 'error');
+
+    flashNotices.forEach((notice) => notice.remove());
+    fieldErrors.forEach((error) => error.remove());
+
+    if (messages.length > 0) {
+        showAlert({
+            icon: isError ? 'error' : 'success',
+            title: isError ? 'Periksa kembali' : 'Berhasil',
+            text: messages.join('\n'),
+            confirmButtonText: 'Tutup',
+        });
+    }
+
     const canvas = document.getElementById('qrCanvas');
     const downloadButton = document.getElementById('downloadQrPng');
 
@@ -39,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, (error) => {
             if (error) {
                 console.error(error);
+                window.AARIAlerts.error('QR code tidak dapat dibuat. Coba muat ulang halaman.');
             }
 
             qrReady = !error;

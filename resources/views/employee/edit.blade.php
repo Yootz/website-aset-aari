@@ -9,7 +9,7 @@
             <h1>Perbarui data anggota tim.</h1>
             <p>Pastikan informasi karyawan dan divisinya tetap sesuai.</p>
         </div>
-        <a href="{{ route('employee.index') }}" class="secondary-button"><span class="button-symbol">←</span> Kembali ke daftar</a>
+        <a href="{{ route('employee.index') }}" class="secondary-button"> Kembali ke daftar</a>
     </div>
 
 
@@ -18,7 +18,7 @@
             <p>Kode karyawan adalah identitas tetap dan tidak dapat diubah.</p>
 
             @if($errors->any())
-                <div class="flash-message" style="border-color: #f2b6ad; color: #9e3b30; background: #fff0ed;">
+                <div class="flash-message" data-swal-type="error" style="border-color: #f2b6ad; color: #9e3b30; background: #fff0ed;">
                     <span style="background: #f2b6ad;">!</span>
                     <div>{{ $errors->first() }}</div>
                 </div>

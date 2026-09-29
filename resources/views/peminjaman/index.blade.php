@@ -7,10 +7,12 @@
         <div>
             <p class="eyebrow">Asset operations / Loans</p>
             <h1>Daftar Peminjaman</h1>
-            <p>Kelola transaksi peminjaman aset dalam sistem manajemen AARI.</p>
+            <p>Lihat transaksi peminjaman aset dalam sistem manajemen AARI.</p>
         </div>
         <div class="heading-actions">
-            <a href="{{ route('peminjaman.monitoring') }}" class="secondary-button">Monitoring</a>
+            @if(auth()->user()?->is_admin)
+                <a href="{{ route('peminjaman.monitoring') }}" class="secondary-button">Monitoring</a>
+            @endif
             <a href="{{ route('peminjaman.create') }}" class="primary-button"><span class="button-symbol">+</span> Buat peminjaman</a>
         </div>
     </div>
@@ -23,7 +25,7 @@
         <div class="panel-head">
             <div>
                 <h2 class="panel-title">Daftar peminjaman</h2>
-                <p class="panel-caption">Riwayat peminjaman aset dari yang terbaru.</p>
+                <p class="panel-caption">Riwayat peminjaman aset, dari yang terbaru.</p>
             </div>
             <span class="count-badge">{{ $peminjaman->count() }} transaksi</span>
         </div>
@@ -32,7 +34,7 @@
             <div class="empty-state">
                 <div class="empty-symbol">+</div>
                 <h3>Belum ada peminjaman</h3>
-                <p>Transaksi dari API peminjaman akan muncul di sini.</p>
+                <p>Transaksi peminjaman yang tercatat akan muncul di sini.</p>
             </div>
         @else
             <div class="table-wrap">

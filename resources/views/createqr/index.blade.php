@@ -10,7 +10,7 @@
             <p>Generate QR code yang mengarah langsung ke detail aset dan riwayat peminjamannya.</p>
         </div>
         @if ($selectedAsset)
-            <button id="downloadQrPng" type="button" class="primary-button no-print" data-asset-code="{{ $selectedAsset->a_code }}" disabled><span class="button-symbol" aria-hidden="true">↓</span> Unduh PNG</button>
+            <button id="downloadQrPng" type="button" class="primary-button no-print" data-asset-code="{{ $selectedAsset->a_code }}" disabled> Unduh PNG</button>
         @endif
     </div>
 
@@ -38,7 +38,7 @@
                     </select>
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="primary-button">Generate <span class="button-symbol">-></span></button>
+                    <button type="submit" class="primary-button">Generate </button>
                 </div>
             </form>
         </div>

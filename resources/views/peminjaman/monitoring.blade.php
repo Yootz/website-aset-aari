@@ -63,7 +63,7 @@
                                 </td>
                                 <td><span class="status-chip status-{{ $loan->p_status }}">{{ ucfirst($loan->p_status) }}</span></td>
                                 <td class="action-column">
-                                    <form action="{{ route('peminjaman.status', $loan->p_code) }}" method="POST" class="status-form">
+                                    <form action="{{ route('peminjaman.status', $loan->p_code) }}" method="POST" class="status-form" data-swal-confirm data-swal-title="Perbarui status peminjaman?" data-swal-text="Status transaksi ini akan diubah. Lanjutkan?" data-swal-icon="question">
                                         @csrf
                                         @method('PATCH')
                                         <label class="sr-only" for="status-{{ $loan->p_code }}">Status {{ $loan->p_code }}</label>

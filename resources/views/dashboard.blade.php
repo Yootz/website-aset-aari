@@ -4,40 +4,55 @@
 
 @section('content')
     <section class="dashboard-hero">
-        <div>
-            <p class="eyebrow">Workspace overview</p>
-            <h1>Dashboard Manajemen Aset <em>AARI.</em></h1>
-            <p class="hero-copy">Sistem terpusat untuk manajemen aset</p>
+        <div class="dashboard-hero-copy">
+            <p class="eyebrow">Website Manajemen aset AARI</p>
+            <h1>Kelola aset<br><em>AARI</em></h1>
+            <a href="{{ route('asset.index') }}" class="hero-action">
+                Buka inventaris
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"></path></svg>
+            </a>
         </div>
-        <div class="hero-orbit" aria-hidden="true">
-            <span class="orbit-line orbit-line-one"></span>
-            <span class="orbit-line orbit-line-two"></span>
-            <span class="orbit-core">A</span>
+        <div class="hero-visual" aria-hidden="true">
+            <div class="hero-visual-grid"></div>
+            <div class="hero-visual-mark">
+                <svg viewBox="0 0 80 80" fill="none"><path d="m40 7 31 17v32L40 73 9 56V24L40 7Z" stroke="currentColor" stroke-width="1.5"></path><path d="m10 24 30 17 30-17M40 41v31M25 15l30 17" stroke="currentColor" stroke-width="1.5"></path></svg>
+            </div>
+            <span class="hero-visual-caption">AARI <i></i> ASSET MANAGEMENT</span>
         </div>
     </section>
 
     <section class="stat-grid" aria-label="Ringkasan data">
-        <a href="{{ route('division.index') }}" class="stat-card stat-card-lime">
+        <a href="{{ route('division.index') }}" class="stat-card">
+            <span class="stat-card-top"><span class="stat-icon stat-icon-blue"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M9 20V8h6v12M3 10h6m6 0h6"></path></svg></span><span class="stat-trend">DATA</span></span>
             <span class="stat-label">Total divisi</span>
             <strong>{{ $divisionCount }}</strong>
             <span class="stat-link">Lihat divisi <span>↗</span></span>
         </a>
-        <a href="{{ route('employee.index') }}" class="stat-card stat-card-coral">
+        <a href="{{ route('employee.index') }}" class="stat-card">
+            <span class="stat-card-top"><span class="stat-icon stat-icon-cyan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="10" cy="7" r="4"></circle><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span><span class="stat-trend">DATA</span></span>
             <span class="stat-label">Total karyawan</span>
             <strong>{{ $employeeCount }}</strong>
             <span class="stat-link">Lihat karyawan <span>↗</span></span>
         </a>
-        <a href="{{ route('asset.index') }}" class="stat-card stat-card-teal">
+        <a href="{{ route('asset.index') }}" class="stat-card">
+            <span class="stat-card-top"><span class="stat-icon stat-icon-violet"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5 9-5Z"></path><path d="m3 8 9 5 9-5M3 8v9l9 5 9-5V8M12 13v9"></path></svg></span><span class="stat-trend">DATA</span></span>
             <span class="stat-label">Total aset</span>
             <strong>{{ $assetCount }}</strong>
             <span class="stat-link">Lihat aset <span>↗</span></span>
+        </a>
+        <a href="{{ route('peminjaman.index') }}" class="stat-card">
+            <span class="stat-card-top"><span class="stat-icon stat-icon-amber"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3"></path><path d="M16 3h5v5M10 14 21 3"></path></svg></span><span class="stat-trend">DATA</span></span>
+            <span class="stat-label">Total peminjaman</span>
+            <strong>{{ $peminjamanCount }}</strong>
+            <span class="stat-link">Lihat peminjaman <span>↗</span></span>
         </a>
     </section>
 
     <section class="dashboard-section">
         <div class="section-heading">
             <div>
-                <p class="eyebrow">Quick access</p>
+                <p class="eyebrow">Workspace / Shortcuts</p>
+                <h2>Akses cepat</h2>
             </div>
             <span class="section-rule"></span>
         </div>
@@ -83,8 +98,8 @@
     <section class="dashboard-section division-overview">
         <div class="section-heading">
             <div>
-                <p class="eyebrow">Team structure</p>
-                <h2>Divisi</h2>
+                <p class="eyebrow">Team structure / Distribution</p>
+                <h2>Anggota per divisi</h2>
             </div>
             <a href="{{ route('division.index') }}" class="text-link">Lihat semua <span>↗</span></a>
         </div>

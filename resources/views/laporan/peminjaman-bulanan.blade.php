@@ -73,6 +73,19 @@
         const reportPeriodLabel = document.getElementById('report-period-label');
         const reportEndpoint = @json(route('api.laporan.peminjaman.bulanan'));
         const knownStatuses = new Set(['pending', 'approved', 'returned', 'rejected', 'borrowed']);
+        let reportWasFiltered = false;
+
+        function notifyReport(type, message, title) {
+            const notification = { icon: type, title, text: message, confirmButtonText: 'Tutup' };
+
+            if (window.AARIAlerts) {
+                window.AARIAlerts.show(notification);
+                return;
+            }
+
+            window.__aariAlertsQueue ??= [];
+            window.__aariAlertsQueue.push(notification);
+        }
 
         function appendStackedCell(row, primaryText, secondaryText) {
             const cell = document.createElement('td');
@@ -137,6 +150,8 @@
         }
 
         async function loadReport() {
+            const shouldNotifySuccess = reportWasFiltered;
+            reportWasFiltered = false;
             const [year, month] = reportPeriod.value.split('-').map(Number);
             const query = new URLSearchParams({ month: String(month), year: String(year) });
 
@@ -165,12 +180,16 @@
                     ? `${report.data.length} detail aset ditemukan.`
                     : 'Tidak ada data untuk periode ini.';
                 reportFeedback.dataset.state = '';
+                if (shouldNotifySuccess) {
+                    notifyReport('success', 'Laporan berhasil diperbarui.', 'Berhasil');
+                }
             } catch (error) {
                 renderRows([]);
                 reportTotalLoans.textContent = '0';
                 reportTotalAssets.textContent = '0';
-                reportFeedback.textContent = error.message;
+                reportFeedback.textContent = '';
                 reportFeedback.dataset.state = 'error';
+                notifyReport('error', error.message, 'Laporan gagal dimuat');
             } finally {
                 reportForm.querySelector('button').disabled = false;
             }
@@ -178,6 +197,7 @@
 
         reportForm.addEventListener('submit', (event) => {
             event.preventDefault();
+            reportWasFiltered = true;
             loadReport();
         });
 

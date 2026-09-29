@@ -23,6 +23,8 @@ Route::get('asset/{a_code}', [AssetController::class, 'lookup'])->name('asset.lo
 
 Route::get('peminjaman/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
 Route::post('peminjaman', [PeminjamanController::class, 'storeWeb'])->name('peminjaman.store');
+Route::get('peminjaman', [PeminjamanController::class, 'webIndex'])->name('peminjaman.index');
+Route::get('peminjaman/{peminjaman}', [PeminjamanController::class, 'show'])->name('peminjaman.show');
 
 Route::middleware('admin')->group(function (): void {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -33,9 +35,7 @@ Route::middleware('admin')->group(function (): void {
     Route::post('asset', [AssetController::class, 'store'])->name('asset.store');
     Route::get('createqr', [QRCodeController::class, 'index'])->name('createqr.index');
 
-    Route::get('peminjaman', [PeminjamanController::class, 'webIndex'])->name('peminjaman.index');
     Route::get('monitoring-peminjaman', [PeminjamanController::class, 'monitoring'])->name('peminjaman.monitoring');
     Route::patch('peminjaman/{peminjaman}/status', [PeminjamanController::class, 'updateStatusWeb'])->name('peminjaman.status');
-    Route::get('peminjaman/{peminjaman}', [PeminjamanController::class, 'show'])->name('peminjaman.show');
     Route::get('laporan/peminjaman/bulanan', [MonthlyLoanReportController::class, 'page'])->name('laporan.peminjaman.bulanan');
 });
