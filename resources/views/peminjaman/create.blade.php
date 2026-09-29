@@ -9,7 +9,7 @@
             <h1>Catat peminjaman baru.</h1>
             <p>Pilih karyawan, jadwal peminjaman, dan aset yang akan dibawa keluar dari inventaris.</p>
         </div>
-        <a href="{{ auth()->user()?->is_admin ? route('peminjaman.index') : route('asset.index') }}" class="secondary-button"><span class="button-symbol"><-</span> Kembali</a>
+        <a href="{{ auth()->user()?->is_admin ? route('peminjaman.index') : route('asset.index') }}" class="secondary-button"> Kembali</a>
     </div>
 
         <section class="form-panel">
@@ -17,7 +17,7 @@
             <p>Aset yang dipilih akan berubah menjadi unavailable setelah transaksi disimpan.</p>
 
             @if($errors->any())
-                <div class="flash-message" style="border-color: #f2b6ad; color: #9e3b30; background: #fff0ed;">
+                <div class="flash-message" data-swal-type="error" style="border-color: #f2b6ad; color: #9e3b30; background: #fff0ed;">
                     <span style="background: #f2b6ad;">!</span>
                     <div>{{ $errors->first() }}</div>
                 </div>

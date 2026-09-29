@@ -16,7 +16,7 @@
         <p>Akses admin dibutuhkan untuk mengubah data dan mengelola peminjaman.</p>
 
         @if($errors->any())
-            <div class="flash-message" style="border-color: #f2b6ad; color: #9e3b30; background: #fff0ed;">
+            <div class="flash-message" data-swal-type="error" style="border-color: #f2b6ad; color: #9e3b30; background: #fff0ed;">
                 <span style="background: #f2b6ad;">!</span>
                 <div>{{ $errors->first() }}</div>
             </div>

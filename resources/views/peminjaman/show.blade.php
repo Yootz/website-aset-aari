@@ -9,7 +9,7 @@
             <h1>{{ $peminjaman->p_code }}</h1>
             <p>Rincian aset, peminjam, dan jadwal pengembalian untuk transaksi ini.</p>
         </div>
-        <a href="{{ route('peminjaman.index') }}" class="secondary-button"><span class="button-symbol"><-</span> Semua peminjaman</a>
+        <a href="{{ route('peminjaman.index') }}" class="secondary-button"> Semua peminjaman</a>
     </div>
 
     <section class="detail-grid">

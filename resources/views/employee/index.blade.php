@@ -58,7 +58,7 @@
                                     <td class="action-column">
                                         <div class="action-group">
                                             <a href="{{ route('employee.edit', $emp->e_code) }}" class="action-link action-edit" aria-label="Edit {{ $emp->e_name }}">Edit</a>
-                                            <form action="{{ route('employee.destroy', $emp->e_code) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus karyawan ini?')">
+                                            <form action="{{ route('employee.destroy', $emp->e_code) }}" method="POST" data-swal-confirm data-swal-title="Hapus karyawan?" data-swal-text="Data karyawan ini akan dihapus. Tindakan ini tidak dapat dibatalkan." data-swal-confirm-color="#b42318">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="action-link action-delete" aria-label="Hapus {{ $emp->e_name }}">Hapus</button>

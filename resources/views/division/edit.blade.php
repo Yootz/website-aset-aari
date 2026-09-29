@@ -9,7 +9,7 @@
             <h1>Perbarui identitas divisi.</h1>
             <p>Jaga struktur organisasi tetap akurat dan mudah dipahami.</p>
         </div>
-        <a href="{{ route('division.index') }}" class="secondary-button"><span class="button-symbol">←</span> Kembali ke daftar</a>
+        <a href="{{ route('division.index') }}" class="secondary-button"> Kembali ke daftar</a>
     </div>
 
 
@@ -18,7 +18,7 @@
             <p>Kode divisi adalah identitas tetap dan tidak dapat diubah.</p>
 
             @if($errors->any())
-                <div class="flash-message" style="border-color: #f2b6ad; color: #9e3b30; background: #fff0ed;">
+                <div class="flash-message" data-swal-type="error" style="border-color: #f2b6ad; color: #9e3b30; background: #fff0ed;">
                     <span style="background: #f2b6ad;">!</span>
                     <div>{{ $errors->first() }}</div>
                 </div>

@@ -2,6 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Asset;
+use App\Models\DetailPeminjaman;
+use App\Models\Division;
+use App\Models\Employee;
+use App\Models\Peminjaman;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -52,18 +57,25 @@ class AdminAuthenticationTest extends TestCase
         $this->assertDatabaseCount('users', 0);
     }
 
-    public function test_guest_can_read_master_pages_and_create_loan_but_admin_pages_require_login(): void
+    public function test_guest_can_browse_loan_list_and_detail_while_admin_pages_require_login(): void
     {
+        $loan = $this->createLoanForDisplay();
+
         $this->get('/employee')->assertOk();
         $this->get('/division')->assertOk();
         $this->get('/asset')->assertOk();
         $this->get('/peminjaman/create')->assertOk();
+        $this->get('/peminjaman')->assertOk()
+            ->assertSee('Peminjaman')
+            ->assertSee('Login admin')
+            ->assertDontSee('Monitoring');
+        $this->get(route('peminjaman.show', $loan))->assertOk()
+            ->assertSee($loan->p_code);
 
         $this->get('/')->assertRedirect(route('login'));
         $this->get('/employee/create')->assertRedirect(route('login'));
         $this->get('/division/create')->assertRedirect(route('login'));
         $this->get('/asset/create')->assertRedirect(route('login'));
-        $this->get('/peminjaman')->assertRedirect(route('login'));
         $this->get('/monitoring-peminjaman')->assertRedirect(route('login'));
         $this->get('/laporan/peminjaman/bulanan')->assertRedirect(route('login'));
         $this->get('/createqr')->assertRedirect(route('login'));
@@ -75,6 +87,9 @@ class AdminAuthenticationTest extends TestCase
     {
         $this->actingAs(User::factory()->create());
 
+        $loan = $this->createLoanForDisplay();
+        $asset = $loan->details()->firstOrFail()->asset;
+
         $this->get('/employee')->assertOk()
             ->assertDontSee('Tambah karyawan')
             ->assertDontSee('Edit');
@@ -83,15 +98,62 @@ class AdminAuthenticationTest extends TestCase
             ->assertDontSee('Edit');
         $this->get('/asset')->assertOk()
             ->assertSee('Login admin')
+            ->assertSee('Peminjaman')
             ->assertSee('Pinjam aset')
             ->assertDontSee('Tambah aset')
             ->assertDontSee('Buat QR aset');
         $this->get('/peminjaman/create')->assertOk();
+        $this->get('/peminjaman')->assertOk()
+            ->assertSee(route('peminjaman.show', $loan), false)
+            ->assertSee('Buat peminjaman')
+            ->assertDontSee('Monitoring');
+        $this->get(route('peminjaman.show', $loan))->assertOk()
+            ->assertSee($loan->p_code)
+            ->assertSee($asset->a_name);
 
         $this->get('/')->assertForbidden();
         $this->post('/asset', [])->assertForbidden();
-        $this->get('/peminjaman')->assertForbidden();
+        $this->get('/monitoring-peminjaman')->assertForbidden();
+        $this->patch(route('peminjaman.status', $loan), ['p_status' => 'approved'])->assertForbidden();
         $this->getJson('/api/peminjaman')->assertForbidden();
+    }
+
+    private function createLoanForDisplay(): Peminjaman
+    {
+        $division = Division::create([
+            'd_code' => 'DIV-TEST',
+            'd_name' => 'Divisi Uji',
+        ]);
+        $employee = Employee::create([
+            'e_code' => 'EMP-TEST',
+            'e_name' => 'Karyawan Uji',
+            'e_d_code' => $division->d_code,
+        ]);
+        $asset = Asset::create([
+            'a_code' => 'AST-TEST',
+            'a_name' => 'Laptop Uji',
+            'a_type' => 'Elektronik',
+            'a_desc' => 'Aset untuk pengujian.',
+            'a_status' => 'unavailable',
+        ]);
+        $loan = Peminjaman::create([
+            'p_code' => 'PJM-TEST',
+            'e_code' => $employee->e_code,
+            'tgl_pinjam' => '2026-09-29',
+            'tgl_balik' => '2026-10-01',
+            'p_status' => 'pending',
+            'p_desc' => null,
+        ]);
+
+        DetailPeminjaman::create([
+            'dt_code' => 'DT-TEST',
+            'p_code' => $loan->p_code,
+            'a_code' => $asset->a_code,
+            'dt_qty' => 1,
+            'dt_status' => 'borrowed',
+        ]);
+
+        return $loan;
     }
 
     public function test_admin_sees_the_full_navigation_and_can_log_out(): void
