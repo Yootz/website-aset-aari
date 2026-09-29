@@ -5,7 +5,7 @@
 @section('content')
     <div class="page-heading">
         <div>
-            <p class="eyebrow">Peminjaman / Detail transaksi</p>
+            <p class="eyebrow"></p>
             <h1>{{ $peminjaman->p_code }}</h1>
             <p>Rincian aset, peminjam, dan jadwal pengembalian untuk transaksi ini.</p>
         </div>
