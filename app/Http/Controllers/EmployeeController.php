@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Division;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -11,8 +12,21 @@ class EmployeeController extends Controller
     // Menampilkan daftar karyawan beserta divisinya
     public function index()
     {
-        $employees = Employee::with('division')->get();
+        $employees = Employee::with('division')->orderBy('e_code')->paginate(5);
         return view('employee.index', compact('employees'));
+    }
+
+    public function loadMore(Request $request): JsonResponse
+    {
+        $page = $request->get('page', 2);
+        $employees = Employee::with('division')->orderBy('e_code')->paginate(5, ['*'], 'page', $page);
+
+        return response()->json([
+            'data' => $employees->items(),
+            'current_page' => $employees->currentPage(),
+            'last_page' => $employees->lastPage(),
+            'has_more' => $employees->hasMorePages(),
+        ]);
     }
 
     // Form tambah karyawan

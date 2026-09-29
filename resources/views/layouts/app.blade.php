@@ -87,7 +87,6 @@
         <main class="main-content">
             <header class="topbar">
                 <div class="topbar-context">
-                    <span class="topbar-description">Manajemen aset</span>
                 </div>
                 <div class="topbar-actions">
                     @if($isAdmin)
@@ -107,5 +106,6 @@
             </div>
         </main>
     </div>
+    @stack('scripts')
 </body>
 </html>

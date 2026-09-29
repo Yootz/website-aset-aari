@@ -1,7 +1,83 @@
-@import 'tailwindcss';
+.show-more-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 28px 22px;
+    border-top: 1px solid var(--line);
+}
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
+.show-more-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 20px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: var(--blue);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 650;
+    line-height: 1; 
+    cursor: pointer;
+    transition: background .3s, transform .3s, box-shadow .3s, opacity .3s; 
+    box-shadow: 0 4px 12px rgba(1, 86, 36, .15);
+    position: relative;
+    overflow: hidden;
+}
+
+.show-more-btn:hover:not(:disabled) {
+    background: var(--cyan);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(2, 136, 57, .25);
+}
+
+.show-more-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.show-more-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.show-more-btn .btn-text,
+.show-more-btn .btn-loading {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 650;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.show-more-btn .btn-text {
+    display: inline-block;
+}
+
+.show-more-btn .btn-loading {
+    display: none;
+}
+
+.show-more-btn .btn-loading::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+    border: 2px solid rgba(255, 255, 255, .3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 @theme {
     --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
@@ -124,14 +200,18 @@ h1, h2, h3, .brand, .main-nav, .sidebar-label, .primary-button, .secondary-butto
 .panel-caption { margin: 4px 0 0; color: var(--muted); font-size: 11px; }
 .count-badge { padding: 6px 9px; border: 1px solid #d3eadb; border-radius: 5px; color: #015624; background: #eff8f1; font-size: 10px; font-weight: 650; }
 .table-wrap { overflow-x: auto; }
-.division-table { width: 100%; border-collapse: collapse; min-width: 560px; font-variant-numeric: tabular-nums; }
-.division-table th { padding: 12px 22px; color: #496351; background: #f5faf6; font-size: 9px; font-weight: 700; letter-spacing: .1em; text-align: left; text-transform: uppercase; }
-.division-table td { padding: 16px 22px; border-top: 1px solid #edf4ef; color: #245a35; font-size: 12px; vertical-align: middle; }
+.division-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.division-table th { padding: 12px 16px; color: #496351; background: #f5faf6; font-size: 9px; font-weight: 700; letter-spacing: .1em; text-align: left; text-transform: uppercase; white-space: nowrap; }
+.division-table td { padding: 12px 16px; border-top: 1px solid #edf4ef; color: #245a35; font-size: 12px; vertical-align: top; word-wrap: break-word; overflow-wrap: break-word; }
 .division-table tbody tr { transition: background .2s ease; }
 .division-table tbody tr:hover { background: #f6fbf7; }
-.code-chip { display: inline-flex; padding: 5px 7px; border: 1px solid #e1ece4; border-radius: 4px; color: #245a35; background: #f5faf6; font-family: var(--font-code); font-size: 10px; font-weight: 550; font-variant-numeric: tabular-nums; }
-.division-name { color: var(--ink); font-weight: 650; }
-.description { max-width: 460px; color: var(--muted); line-height: 1.5; }
+.division-table th:first-child,
+.division-table td:first-child { width: 110px; }
+.division-table th:last-child,
+.division-table td:last-child { width: 160px; }
+.code-chip { display: inline-flex; padding: 5px 7px; border: 1px solid #e1ece4; border-radius: 4px; color: #245a35; background: #f5faf6; font-family: var(--font-code); font-size: 10px; font-weight: 550; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.division-name { color: var(--ink); font-weight: 650; word-wrap: break-word; overflow-wrap: break-word; }
+.description { color: var(--muted); line-height: 1.5; word-wrap: break-word; overflow-wrap: break-word; }
 .action-column { width: 160px; white-space: nowrap; }
 .action-group { display: flex; align-items: center; gap: 7px; }
 .action-group form { margin: 0; }

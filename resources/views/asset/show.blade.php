@@ -5,11 +5,11 @@
 @section('content')
     <div class="page-heading">
         <div>
-            <p class="eyebrow">Aset / Riwayat peminjaman</p>
+            <p class="eyebrow"></p>
             <h1>{{ $asset->a_name }}</h1>
             <p>Informasi aset dan seluruh detail peminjaman yang pernah tercatat.</p>
         </div>
-        <a href="{{ route('asset.index') }}" class="secondary-button"><span class="button-symbol"><-</span> Semua aset</a>
+        <a href="{{ route('asset.index') }}" class="secondary-button"> Semua aset</a>
     </div>
 
     <section class="detail-grid">

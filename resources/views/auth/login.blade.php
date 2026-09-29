@@ -5,7 +5,7 @@
 @section('content')
     <div class="page-heading">
         <div>
-            <p class="eyebrow">Administrator access</p>
+            <p class="eyebrow"></p>
             <h1>Masuk sebagai admin.</h1>
             <p>Masukkan password admin untuk membuka pengelolaan workspace.</p>
         </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Asset;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -12,9 +13,22 @@ class AssetController extends Controller
 {
     public function index(): View
     {
-        $assets = Asset::withCount('details')->orderBy('a_code')->get();
+        $assets = Asset::withCount('details')->orderBy('a_code')->paginate(5);
 
         return view('asset.index', compact('assets'));
+    }
+
+    public function loadMore(Request $request): JsonResponse
+    {
+        $page = $request->get('page', 2);
+        $assets = Asset::withCount('details')->orderBy('a_code')->paginate(5, ['*'], 'page', $page);
+
+        return response()->json([
+            'data' => $assets->items(),
+            'current_page' => $assets->currentPage(),
+            'last_page' => $assets->lastPage(),
+            'has_more' => $assets->hasMorePages(),
+        ]);
     }
 
     public function create(): View

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Division;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class DivisionController extends Controller
@@ -10,8 +11,21 @@ class DivisionController extends Controller
     // Menampilkan daftar divisi
     public function index()
     {
-        $divisions = Division::all();
+        $divisions = Division::orderBy('d_code')->paginate(5);
         return view('division.index', compact('divisions'));
+    }
+
+    public function loadMore(Request $request): JsonResponse
+    {
+        $page = $request->get('page', 2);
+        $divisions = Division::orderBy('d_code')->paginate(5, ['*'], 'page', $page);
+
+        return response()->json([
+            'data' => $divisions->items(),
+            'current_page' => $divisions->currentPage(),
+            'last_page' => $divisions->lastPage(),
+            'has_more' => $divisions->hasMorePages(),
+        ]);
     }
 
     // Menampilkan form tambah divisi

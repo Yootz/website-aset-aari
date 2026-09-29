@@ -43,7 +43,7 @@ class PeminjamanController extends Controller
     {
         $peminjaman = Peminjaman::with(['employee', 'details.asset'])
             ->latest('created_at')
-            ->get();
+            ->paginate(5);
 
         return view('peminjaman.index', compact('peminjaman'));
     }
@@ -52,9 +52,24 @@ class PeminjamanController extends Controller
     {
         $peminjaman = Peminjaman::with(['employee', 'details.asset'])
             ->latest('created_at')
-            ->get();
+            ->paginate(5);
 
         return view('peminjaman.monitoring', compact('peminjaman'));
+    }
+
+    public function loadMore(Request $request): JsonResponse
+    {
+        $page = $request->get('page', 2);
+        $peminjaman = Peminjaman::with(['employee', 'details.asset'])
+            ->latest('created_at')
+            ->paginate(5, ['*'], 'page', $page);
+
+        return response()->json([
+            'data' => $peminjaman->items(),
+            'current_page' => $peminjaman->currentPage(),
+            'last_page' => $peminjaman->lastPage(),
+            'has_more' => $peminjaman->hasMorePages(),
+        ]);
     }
 
     public function updateStatusWeb(Request $request, Peminjaman $peminjaman): RedirectResponse

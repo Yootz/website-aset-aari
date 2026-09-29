@@ -5,7 +5,7 @@
 @section('content')
     <div class="page-heading">
         <div>
-            <p class="eyebrow">Asset operations / New loan</p>
+            <p class="eyebrow"></p>
             <h1>Catat peminjaman baru.</h1>
             <p>Pilih karyawan, jadwal peminjaman, dan aset yang akan dibawa keluar dari inventaris.</p>
         </div>

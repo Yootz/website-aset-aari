@@ -19,7 +19,7 @@
                 <label for="report-period">Periode laporan</label>
                 <input id="report-period" name="period" type="month" value="{{ now()->format('Y-m') }}" required>
             </div>
-            <button class="primary-button" type="submit">Tampilkan laporan</button>
+            <button class="primary-button" type="submit">Muat laporan</button>
         </form>
         <p id="report-feedback" class="report-feedback" role="status" aria-live="polite">Memuat laporan...</p>
     </section>
