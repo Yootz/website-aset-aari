@@ -7,7 +7,7 @@ Aplikasi web untuk melihat dan mengelola data aset, pegawai, divisi, serta prose
 - PHP 8.2 atau lebih baru.
 - Composer 2.
 - Database yang didukung Laravel dan dapat diakses aplikasi, misalnya MySQL.
-- Node.js dan npm untuk memasang serta membangun aset frontend.
+- Node.js dan npm untuk memasang serta membangun aset frontend. (Hanya untuk build website, tidak harus dipasang di production server)
 
 Composer adalah pengelola dependency PHP. Perintah `composer install` memasang versi package yang tercatat di `composer.lock`; gunakan perintah ini saat pertama kali menyiapkan proyek atau setelah mengambil perubahan baru. Jangan gunakan `composer update` untuk deployment rutin karena perintah tersebut dapat mengubah versi dependency.
 
