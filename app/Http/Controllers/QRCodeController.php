@@ -25,7 +25,7 @@ class QRCodeController extends Controller
         $selectedAsset = $assets->firstWhere('a_code', $selectedCode) ?? $assets->first();
 
         $qrUrl = $selectedAsset
-            ? route('asset.lookup', ['a_code' => $selectedAsset->a_code])
+            ? route('asset.show', ['asset' => $selectedAsset->a_code])
             : route('asset.index');
 
         return view('createqr.index', [
