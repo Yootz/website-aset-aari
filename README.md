@@ -1,5 +1,5 @@
 ## Aplikasi Manajemen Aset dan Peminjaman
-
+Magang AARI
 Aplikasi web untuk melihat dan mengelola data aset, pegawai, divisi, serta proses peminjaman dan pengembalian aset.
 
 ## Prasyarat
