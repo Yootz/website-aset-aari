@@ -12,6 +12,8 @@ return new class extends Migration
             $table->string('dt_code', 20)->primary();
             $table->string('p_code', 20);
             $table->string('a_code', 20);
+            $table->unsignedInteger('dt_qty')->default(1);
+            $table->string('dt_status', 20)->default('borrowed');
             $table->foreign('p_code')->references('p_code')->on('peminjaman')->onDelete('cascade');
             $table->foreign('a_code')->references('a_code')->on('master_aset')->onDelete('restrict');
             $table->timestamps();

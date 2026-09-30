@@ -9,16 +9,16 @@
             <h1>Tambahkan anggota tim.</h1>
             <p>Hubungkan karyawan dengan divisinya agar struktur workspace tetap jelas.</p>
         </div>
-        <a href="{{ route('employee.index') }}" class="secondary-button"><span class="button-symbol">←</span> Kembali ke daftar</a>
+        <a href="{{ route('employee.index') }}" class="secondary-button"> Kembali ke daftar</a>
     </div>
 
-    <div class="form-layout">
+
         <section class="form-panel">
             <h2>Detail karyawan</h2>
             <p>Gunakan identitas yang sesuai dengan data internal tim.</p>
 
             @if($errors->any())
-                <div class="flash-message" style="border-color: #f2b6ad; color: #9e3b30; background: #fff0ed;">
+                <div class="flash-message" data-swal-type="error" style="border-color: #f2b6ad; color: #9e3b30; background: #fff0ed;">
                     <span style="background: #f2b6ad;">!</span>
                     <div>{{ $errors->first() }}</div>
                 </div>
@@ -58,15 +58,5 @@
             </form>
         </section>
 
-        <aside class="form-note">
-            <div class="form-note-mark">✦</div>
-            <h3>Tim yang terhubung, kerja yang terbaca.</h3>
-            <p>Relasikan setiap karyawan ke divisi yang tepat agar informasi lebih mudah ditemukan.</p>
-            <ul>
-                <li>Gunakan kode karyawan yang konsisten.</li>
-                <li>Tulis nama lengkap tanpa singkatan.</li>
-                <li>Pilih divisi sesuai tanggung jawab.</li>
-            </ul>
-        </aside>
-    </div>
+
 @endsection

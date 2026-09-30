@@ -1,3 +1,79 @@
+## Aplikasi Manajemen Aset dan Peminjaman
+
+Aplikasi web untuk melihat dan mengelola data aset, pegawai, divisi, serta proses peminjaman dan pengembalian aset.
+
+## Prasyarat
+
+- PHP 8.2 atau lebih baru.
+- Composer 2.
+- Database yang didukung Laravel dan dapat diakses aplikasi, misalnya MySQL.
+- Node.js dan npm untuk memasang serta membangun aset frontend.
+
+Composer adalah pengelola dependency PHP. Perintah `composer install` memasang versi package yang tercatat di `composer.lock`; gunakan perintah ini saat pertama kali menyiapkan proyek atau setelah mengambil perubahan baru. Jangan gunakan `composer update` untuk deployment rutin karena perintah tersebut dapat mengubah versi dependency.
+
+## Menjalankan di Lokal
+
+1. Pasang dependency PHP dari direktori proyek:
+
+	```powershell
+	composer install
+	```
+
+2. Buat file konfigurasi lokal dan kunci aplikasi:
+
+	```powershell
+	Copy-Item .env.example .env
+	php artisan key:generate
+	```
+
+3. Atur koneksi database di `.env`, lalu buat tabel dan data awal:
+
+	```powershell
+	php artisan migrate --seed
+	```
+
+4. Pasang dependency frontend dan kompilasi aset:
+
+	```powershell
+	npm install
+	npm run build
+	```
+
+5. Jalankan aplikasi (Jika tidak memiliki Reverse Proxy Seperti Nginx/IIS):
+
+	```powershell
+	php artisan serve
+	```
+
+Buka alamat lokal yang ditampilkan Artisan di browser. Perintah Composer `composer run setup` juga tersedia untuk menyiapkan dependency, `.env`, application key, migrasi, serta aset frontend secara otomatis. Pastikan konfigurasi database di `.env` sudah benar sebelum menjalankannya.
+
+## Cara Menggunakan
+
+- Masuk melalui halaman login menggunakan akun yang telah disiapkan administrator.
+- Telusuri daftar aset, pegawai, divisi, dan peminjaman melalui menu aplikasi.
+- Buka detail aset atau gunakan QR code aset untuk melihat informasinya dan memulai proses peminjaman.
+- Administrator dapat mengelola data aset, pegawai, dan divisi, memantau peminjaman, memperbarui statusnya, serta melihat laporan peminjaman bulanan.
+
+## Persiapan Production
+
+Siapkan Node.js dan npm pada mesin build atau server sebelum deployment. Dari direktori proyek, pasang dependency frontend dan buat aset production:
+
+```bash
+npm install
+npm run build
+```
+
+Build Vite menghasilkan aset yang digunakan aplikasi di `public/build`. Sertakan hasil build tersebut dalam release yang di-deploy. Pada server production, pasang dependency PHP tanpa package development:
+
+```bash
+composer install --no-dev --optimize-autoloader
+```
+
+Konfigurasikan environment production dan database, lalu jalankan migrasi:
+
+```bash
+php artisan migrate --force
+```
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">

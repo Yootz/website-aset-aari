@@ -10,7 +10,7 @@ class QRCodeController extends Controller
     public function index(Request $request)
     {
         $assets = DB::table('master_aset')
-            ->select('a_code')
+            ->select('a_code', 'a_name')
             ->orderBy('a_code')
             ->get();
 
@@ -24,10 +24,9 @@ class QRCodeController extends Controller
 
         $selectedAsset = $assets->firstWhere('a_code', $selectedCode) ?? $assets->first();
 
-        $baseUrl = rtrim(url('/'), '/');
         $qrUrl = $selectedAsset
-            ? $baseUrl . '/aset?a_code=' . urlencode($selectedAsset->a_code)
-            : $baseUrl . '/aset?a_code=';
+            ? route('asset.lookup', ['a_code' => $selectedAsset->a_code])
+            : route('asset.index');
 
         return view('createqr.index', [
             'assets' => $assets,
