@@ -39,7 +39,7 @@ Composer adalah pengelola dependency PHP. Perintah `composer install` memasang v
 	npm run build
 	```
 
-5. Jalankan aplikasi:
+5. Jalankan aplikasi (Jika tidak memiliki Reverse Proxy Seperti Nginx/IIS):
 
 	```powershell
 	php artisan serve
