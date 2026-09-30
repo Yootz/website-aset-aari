@@ -63,7 +63,12 @@
                                 </td>
                                 <td>{{ $loan->details->count() }} item</td>
                                 <td><span class="status-chip status-{{ $loan->p_status }}">{{ ucfirst($loan->p_status) }}</span></td>
-                                <td class="action-column"><a href="{{ route('peminjaman.show', $loan->p_code) }}" class="action-link action-edit">Detail</a></td>
+                                <td class="action-column">
+                                    <!-- Fitur edit untuk peminjaman (muncul jika status peminjaman adalah pending) -->
+                                    @if(strtolower(trim($loan->p_status)) === 'pending')
+                                        <a href="{{ route('peminjaman.edit', $loan->p_code) }}" class="action-link action-edit">Edit</a>
+                                    @endif
+                                    <a href="{{ route('peminjaman.show', $loan->p_code) }}" class="action-link action-edit">Detail</a></td>
                             </tr>
                         @endforeach
                     </tbody>
