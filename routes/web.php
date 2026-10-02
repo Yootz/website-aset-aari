@@ -4,6 +4,7 @@ use App\Http\Controllers\AssetController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MonthlyLoanReportController;
 use App\Http\Controllers\PeminjamanController;
@@ -29,6 +30,9 @@ Route::post('peminjaman', [PeminjamanController::class, 'storeWeb'])->name('pemi
 Route::get('peminjaman', [PeminjamanController::class, 'webIndex'])->name('peminjaman.index');
 Route::get('peminjaman/load-more', [PeminjamanController::class, 'loadMore'])->name('peminjaman.loadMore');
 Route::get('peminjaman/{peminjaman}', [PeminjamanController::class, 'show'])->name('peminjaman.show');
+Route::resource('peminjaman', PeminjamanController::class)->only(['edit', 'update']);
+// Route::get('peminjaman/{peminjaman}/edit', [PeminjamanController::class, 'edit'])->name('peminjaman.edit');
+// Route::get('/something-went-wrong', [ErrorController::class, 'index'])->name('custom-wrong');
 
 Route::middleware('admin')->group(function (): void {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -37,10 +41,13 @@ Route::middleware('admin')->group(function (): void {
     Route::resource('division', DivisionController::class)->except(['index', 'show']);
 
     Route::post('asset', [AssetController::class, 'store'])->name('asset.store');
+    Route::post('asset/{asset}/maintenance', [AssetController::class, 'maintenance'])->name('asset.maintenance');
+    Route::get('laporan/aset', [AssetController::class, 'report'])->name('laporan.aset');
     Route::get('createqr', [QRCodeController::class, 'index'])->name('createqr.index');
 
     Route::get('monitoring-peminjaman', [PeminjamanController::class, 'monitoring'])->name('peminjaman.monitoring');
     Route::get('monitoring-peminjaman/load-more', [PeminjamanController::class, 'loadMore'])->name('peminjaman.monitoring.loadMore');
     Route::patch('peminjaman/{peminjaman}/status', [PeminjamanController::class, 'updateStatusWeb'])->name('peminjaman.status');
+    Route::get('laporan', [MonthlyLoanReportController::class, 'index'])->name('laporan.index');
     Route::get('laporan/peminjaman/bulanan', [MonthlyLoanReportController::class, 'page'])->name('laporan.peminjaman.bulanan');
 });

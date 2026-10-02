@@ -11,17 +11,35 @@ use Illuminate\View\View;
 
 class AssetController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $assets = Asset::withCount('details')->orderBy('a_code')->paginate(5);
+        $assetStatus = $request->validate([
+            'a_status' => ['sometimes', 'nullable', Rule::in(['all', 'available', 'unavailable', 'pending', 'maintenance'])],
+        ])['a_status'] ?? 'all';
 
-        return view('asset.index', compact('assets'));
+        $assets = Asset::query()
+            ->withCount('details')
+            ->when($assetStatus !== 'all', fn ($query) => $query->whereRaw('LOWER(TRIM(a_status)) = ?', [$assetStatus]))
+            ->orderBy('a_code')
+            ->paginate(5)
+            ->withQueryString();
+
+        return view('asset.index', compact('assets', 'assetStatus'));
     }
 
     public function loadMore(Request $request): JsonResponse
     {
-        $page = $request->get('page', 2);
-        $assets = Asset::withCount('details')->orderBy('a_code')->paginate(5, ['*'], 'page', $page);
+        $validated = $request->validate([
+            'a_status' => ['sometimes', 'nullable', Rule::in(['all', 'available', 'unavailable', 'pending', 'maintenance'])],
+            'page' => ['sometimes', 'integer', 'min:1'],
+        ]);
+        $assetStatus = $validated['a_status'] ?? 'all';
+        $page = $validated['page'] ?? 2;
+        $assets = Asset::query()
+            ->withCount('details')
+            ->when($assetStatus !== 'all', fn ($query) => $query->whereRaw('LOWER(TRIM(a_status)) = ?', [$assetStatus]))
+            ->orderBy('a_code')
+            ->paginate(5, ['*'], 'page', $page);
 
         return response()->json([
             'data' => $assets->items(),
@@ -29,6 +47,46 @@ class AssetController extends Controller
             'last_page' => $assets->lastPage(),
             'has_more' => $assets->hasMorePages(),
         ]);
+    }
+
+    public function report(Request $request): View
+    {
+        $assetStatus = $request->validate([
+            'a_status' => ['sometimes', 'nullable', Rule::in(['all', 'available', 'unavailable', 'pending', 'maintenance'])],
+        ])['a_status'] ?? 'all';
+        $statusLabels = [
+            'all' => 'Semua status',
+            'available' => 'Available',
+            'unavailable' => 'Unavailable',
+            'pending' => 'Pending',
+            'maintenance' => 'Maintenance',
+        ];
+
+        $assets = Asset::query()
+            ->when($assetStatus !== 'all', fn ($query) => $query->whereRaw('LOWER(TRIM(a_status)) = ?', [$assetStatus]))
+            ->orderBy('a_code')
+            ->get(['a_code', 'a_name', 'a_status']);
+        $assetStatusLabel = $statusLabels[$assetStatus];
+
+        return view('laporan.aset', compact('assets', 'assetStatus', 'assetStatusLabel'));
+    }
+
+    public function maintenance(Asset $asset): RedirectResponse
+    {
+        $currentStatus = strtolower(trim((string) $asset->a_status));
+
+        if (! in_array($currentStatus, ['available', 'maintenance'], true)) {
+            return back()->withErrors([
+                'asset' => 'Hanya aset available atau maintenance yang dapat diubah melalui tindakan ini.',
+            ]);
+        }
+
+        $nextStatus = $currentStatus === 'maintenance' ? 'available' : 'maintenance';
+        $asset->update(['a_status' => $nextStatus]);
+
+        return back()->with('success', $nextStatus === 'maintenance'
+            ? 'Aset berhasil diatur ke status maintenance.'
+            : 'Aset berhasil diatur kembali menjadi available.');
     }
 
     public function create(): View
@@ -43,7 +101,7 @@ class AssetController extends Controller
             'a_name' => ['required', 'string', 'max:255'],
             'a_type' => ['required', 'string', 'max:255'],
             'a_desc' => ['required', 'string', 'max:255'],
-            'a_status' => ['required', Rule::in(['available', 'unavailable'])],
+            'a_status' => ['required', Rule::in(['available', 'unavailable', 'pending'])],
         ]);
 
         Asset::create($validated);

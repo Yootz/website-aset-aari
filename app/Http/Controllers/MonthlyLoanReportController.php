@@ -11,6 +11,11 @@ use Illuminate\View\View;
 
 class MonthlyLoanReportController extends Controller
 {
+    public function index(): View
+    {
+        return view('laporan.index');
+    }
+
     public function page(): View
     {
         return view('laporan.peminjaman-bulanan');

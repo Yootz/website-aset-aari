@@ -23,6 +23,18 @@ class MonthlyLoanReportControllerTest extends TestCase
             ->assertSee('Cetak laporan');
     }
 
+    public function test_report_home_offers_monthly_and_current_asset_reports(): void
+    {
+        $this->actingAs(User::factory()->admin()->create());
+
+        $this->get(route('laporan.index'))
+            ->assertOk()
+            ->assertSee('Laporan bulanan peminjaman')
+            ->assertSee('Laporan aset saat ini')
+            ->assertSee(route('laporan.peminjaman.bulanan'))
+            ->assertSee(route('laporan.aset'));
+    }
+
     public function test_monthly_report_returns_loan_details_for_the_requested_month(): void
     {
         $this->actingAs(User::factory()->admin()->create());

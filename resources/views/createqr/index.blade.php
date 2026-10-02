@@ -21,7 +21,7 @@
             <form method="GET" action="{{ route('createqr.index') }}" id="qrForm">
                 <div class="field">
                     <label for="a_code">Pilih aset <span class="required">*</span></label>
-                    <select name="a_code" id="a_code">
+                    <select name="a_code" id="a_code" data-url="{{ route('asset.lookup', ['a_code' => 'PLACEHOLDER']) }}">
                         @forelse ($assets as $asset)
                             <option value="{{ $asset->a_code }}" {{ $selectedAsset && $selectedAsset->a_code === $asset->a_code ? 'selected' : '' }}>{{ $asset->a_code }} - {{ $asset->a_name ?? 'Aset' }}</option>
                         @empty
@@ -37,8 +37,12 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="field">
+                    <label for="qrUrlText">URL QR</label>
+                    <input id="qrUrlText" type="text" name="qrUrlText" value="{{ $qrUrl }}" placeholder="Contoh: https://example.com/aset/1" autofocus>
+                </div>
                 <div class="form-actions">
-                    <button type="submit" class="primary-button">Generate </button>
+                    <button type="submit" class="primary-button">Generate</button>
                 </div>
             </form>
         </div>
