@@ -5,6 +5,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+// use \Throwable;
+use Illuminate\Support\Facades\Log;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -23,3 +25,19 @@ return Application::configure(basePath: dirname(__DIR__))
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
     })->create();
+
+// ->withExceptions(function (Exceptions $exceptions) {
+//     // Merender ulang semua error/exception
+//     $exceptions->render(function (Throwable $e) {
+
+//         // 1. Membuat log error secara otomatis dengan pesan detail
+//         Log::error('Terjadi error sistem: ' . $e->getMessage(), [
+//             'exception' => $e,
+//             'url' => request()->fullUrl(),
+//             'input' => request()->all(),
+//         ]);
+
+//         // 2. Alihkan pengguna ke halaman custom error
+//         return redirect()->route('error.wrong');
+//     });
+// })-> create();

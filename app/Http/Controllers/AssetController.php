@@ -43,7 +43,7 @@ class AssetController extends Controller
             'a_name' => ['required', 'string', 'max:255'],
             'a_type' => ['required', 'string', 'max:255'],
             'a_desc' => ['required', 'string', 'max:255'],
-            'a_status' => ['required', Rule::in(['available', 'unavailable'])],
+            'a_status' => ['required', Rule::in(['available', 'unavailable', 'pending'])],
         ]);
 
         Asset::create($validated);

@@ -102,6 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const canvas = document.getElementById('qrCanvas');
     const downloadButton = document.getElementById('downloadQrPng');
+    
+
+
 
     if (!canvas) {
         return;
@@ -202,6 +205,27 @@ document.addEventListener('DOMContentLoaded', () => {
             downloadLink.download = `QR-${safeAssetCode}.png`;
             downloadLink.href = outputCanvas.toDataURL('image/png');
             downloadLink.click();
+        });
+    }
+
+    // 1. Handle QR URL update based on selected asset
+    const aCodeSelect = document.getElementById('a_code');
+    const qrUrlInput = document.getElementById('qrUrlText');
+
+    if (aCodeSelect && qrUrlInput) {
+        // 2. Handle whenever the user alters the selection option
+        const urlTemplate = aCodeSelect.dataset.url;
+
+        aCodeSelect.addEventListener('change', function () {
+            const selectedAssetCode = this.value;
+
+            if (selectedAssetCode) {
+                // 3. Swap the placeholder string out for the fresh selection
+                qrUrlInput.value = urlTemplate.replace('PLACEHOLDER', encodeURIComponent(selectedAssetCode) );
+            } else {
+                // 4. Fall back to empty or back to the original load URL if desired
+                qrUrlInput.value = '';
+            }
         });
     }
 });
