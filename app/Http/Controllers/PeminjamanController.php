@@ -48,13 +48,20 @@ class PeminjamanController extends Controller
         return view('peminjaman.index', compact('peminjaman'));
     }
 
-    public function monitoring(): View
+    public function monitoring(Request $request): View
     {
-        $peminjaman = Peminjaman::with(['employee', 'details.asset'])
-            ->latest('created_at')
-            ->paginate(5);
+        $loanStatus = $request->validate([
+            'p_status' => ['sometimes', 'nullable', Rule::in(['all', 'pending', 'approved', 'returned', 'rejected'])],
+        ])['p_status'] ?? 'all';
 
-        return view('peminjaman.monitoring', compact('peminjaman'));
+        $peminjaman = Peminjaman::query()
+            ->with(['employee', 'details.asset'])
+            ->when($loanStatus !== 'all', fn ($query) => $query->whereRaw('LOWER(TRIM(p_status)) = ?', [$loanStatus]))
+            ->latest('created_at')
+            ->paginate(5)
+            ->withQueryString();
+
+        return view('peminjaman.monitoring', compact('peminjaman', 'loanStatus'));
     }
 
     public function edit(Peminjaman $peminjaman): View
@@ -140,7 +147,7 @@ class PeminjamanController extends Controller
                     'dt_code' => $this->generateDetailCode(),
                     'a_code' => $requestedDetail['a_code'],
                     'dt_qty' => $requestedDetail['dt_qty'],
-                    'dt_status' => 'borrowed',
+                    'dt_status' => $peminjaman->p_status === 'approved' ? 'borrowed' : 'pending',
                 ]);
             }
 
@@ -151,7 +158,9 @@ class PeminjamanController extends Controller
             }
 
             if ($newAssetCodes !== []) {
-                Asset::query()->whereIn('a_code', $newAssetCodes)->update(['a_status' => 'pending']);
+                Asset::query()->whereIn('a_code', $newAssetCodes)->update([
+                    'a_status' => $peminjaman->p_status === 'approved' ? 'unavailable' : 'pending',
+                ]);
             }
         });
 
@@ -160,8 +169,15 @@ class PeminjamanController extends Controller
 
     public function loadMore(Request $request): JsonResponse
     {
-        $page = $request->get('page', 2);
-        $peminjaman = Peminjaman::with(['employee', 'details.asset'])
+        $validated = $request->validate([
+            'p_status' => ['sometimes', 'nullable', Rule::in(['all', 'pending', 'approved', 'returned', 'rejected'])],
+            'page' => ['sometimes', 'integer', 'min:1'],
+        ]);
+        $loanStatus = $validated['p_status'] ?? 'all';
+        $page = $validated['page'] ?? 2;
+        $peminjaman = Peminjaman::query()
+            ->with(['employee', 'details.asset'])
+            ->when($loanStatus !== 'all', fn ($query) => $query->whereRaw('LOWER(TRIM(p_status)) = ?', [$loanStatus]))
             ->latest('created_at')
             ->paginate(5, ['*'], 'page', $page);
 
@@ -242,7 +258,7 @@ class PeminjamanController extends Controller
                     'dt_code' => $this->generateDetailCode(),
                     'a_code' => $detail['a_code'],
                     'dt_qty' => $detail['dt_qty'],
-                    'dt_status' => 'borrowed',
+                    'dt_status' => 'pending',
                 ]);
 
                 $assets[$detail['a_code']]->update(['a_status' => 'pending']);
@@ -278,6 +294,16 @@ class PeminjamanController extends Controller
                 Asset::query()
                     ->whereIn('a_code', $assetCodes)
                     ->update(['a_status' => 'unavailable']);
+
+                $peminjaman->details()->update(['dt_status' => 'borrowed']);
+            } elseif ($validated['p_status'] === 'pending') {
+                $assetCodes = $peminjaman->details()->pluck('a_code')->unique();
+
+                Asset::query()
+                    ->whereIn('a_code', $assetCodes)
+                    ->update(['a_status' => 'pending']);
+
+                $peminjaman->details()->update(['dt_status' => 'pending']);
             }
 
             $peminjaman->update(['p_status' => $validated['p_status']]);
@@ -299,13 +325,15 @@ class PeminjamanController extends Controller
             $assets = Asset::query()
                 ->whereIn('a_code', $assetCodes)
                 ->lockForUpdate()
-                ->get()
-                ->keyBy('a_code');
+                ->get();
 
             foreach ($peminjaman->details as $detail) {
                 $detail->update(['dt_status' => 'returned']);
-                $assets[$detail->a_code]->update(['a_status' => 'available']);
             }
+
+            Asset::query()
+                ->whereIn('a_code', $assetCodes)
+                ->update(['a_status' => 'available']);
 
             $peminjaman->update(['p_status' => $status]);
             DB::commit();

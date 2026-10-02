@@ -12,7 +12,7 @@ class PeminjamanControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_valid_payload_creates_loan_and_marks_asset_unavailable(): void
+    public function test_valid_payload_creates_pending_loan_and_marks_asset_pending(): void
     {
         $this->createEmployeeAndAsset('EMP-001', 'ASSET-001', 'available');
 
@@ -27,13 +27,13 @@ class PeminjamanControllerTest extends TestCase
 
         $response->assertCreated()
             ->assertJsonPath('data.p_status', 'pending')
-            ->assertJsonPath('data.details.0.dt_status', 'borrowed');
+            ->assertJsonPath('data.details.0.dt_status', 'pending');
 
         $this->assertDatabaseHas('peminjaman', ['e_code' => 'EMP-001']);
         $this->assertDatabaseHas('detail_peminjaman', ['a_code' => 'ASSET-001']);
         $this->assertDatabaseHas('master_aset', [
             'a_code' => 'ASSET-001',
-            'a_status' => 'unavailable',
+            'a_status' => 'pending',
         ]);
     }
 
@@ -53,6 +53,26 @@ class PeminjamanControllerTest extends TestCase
         $response->assertUnprocessable()
             ->assertJsonValidationErrors(['details'])
             ->assertJsonPath('errors.details.0', 'One or more assets are not available: ASSET-001.');
+
+        $this->assertDatabaseCount('peminjaman', 0);
+        $this->assertDatabaseCount('detail_peminjaman', 0);
+    }
+
+    public function test_maintenance_asset_rejects_loan_without_persisting_transaction(): void
+    {
+        $this->createEmployeeAndAsset('EMP-001', 'ASSET-001', 'maintenance');
+
+        $response = $this->postJson('/api/peminjaman', [
+            'e_code' => 'EMP-001',
+            'tgl_pinjam' => '2026-09-25',
+            'tgl_balik' => '2026-10-01',
+            'details' => [
+                ['a_code' => 'ASSET-001', 'dt_qty' => 1],
+            ],
+        ]);
+
+        $response->assertUnprocessable()
+            ->assertJsonValidationErrors(['details']);
 
         $this->assertDatabaseCount('peminjaman', 0);
         $this->assertDatabaseCount('detail_peminjaman', 0);
@@ -141,7 +161,8 @@ class PeminjamanControllerTest extends TestCase
         ]);
 
         $response->assertOk()
-            ->assertJsonPath('data.p_status', 'approved');
+            ->assertJsonPath('data.p_status', 'approved')
+            ->assertJsonPath('data.details.0.dt_status', 'borrowed');
         $this->assertDatabaseHas('master_aset', [
             'a_code' => 'ASSET-001',
             'a_status' => 'unavailable',
@@ -149,6 +170,18 @@ class PeminjamanControllerTest extends TestCase
         $this->assertDatabaseHas('master_aset', [
             'a_code' => 'ASSET-002',
             'a_status' => 'unavailable',
+        ]);
+
+        $pendingResponse = $this->patchJson("/api/peminjaman/{$peminjamanCode}/status", [
+            'p_status' => 'pending',
+        ]);
+
+        $pendingResponse->assertOk()
+            ->assertJsonPath('data.p_status', 'pending')
+            ->assertJsonPath('data.details.0.dt_status', 'pending');
+        $this->assertDatabaseHas('master_aset', [
+            'a_code' => 'ASSET-001',
+            'a_status' => 'pending',
         ]);
     }
 
@@ -160,6 +193,27 @@ class PeminjamanControllerTest extends TestCase
             ->assertOk()
             ->assertSee('name="tgl_pinjam" value="2026-09-25"', false)
             ->assertSee('name="tgl_balik" value=""', false);
+    }
+
+    public function test_monitoring_index_filters_loans_by_status(): void
+    {
+        $this->createEmployeeAndAsset('EMP-001', 'ASSET-001', 'available');
+        foreach (['PJM-PENDING' => 'pending', 'PJM-APPROVED' => 'approved'] as $loanCode => $status) {
+            DB::table('peminjaman')->insert([
+                'p_code' => $loanCode,
+                'tgl_pinjam' => '2026-09-25',
+                'e_code' => 'EMP-001',
+                'p_status' => $status,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+        $this->actingAs(User::factory()->admin()->create());
+
+        $this->get('/monitoring-peminjaman?p_status=approved')
+            ->assertOk()
+            ->assertSee('PJM-APPROVED')
+            ->assertDontSee('PJM-PENDING');
     }
 
     public function test_edit_updates_dates_and_accepts_a_blank_return_date(): void

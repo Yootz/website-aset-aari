@@ -41,10 +41,13 @@ Route::middleware('admin')->group(function (): void {
     Route::resource('division', DivisionController::class)->except(['index', 'show']);
 
     Route::post('asset', [AssetController::class, 'store'])->name('asset.store');
+    Route::post('asset/{asset}/maintenance', [AssetController::class, 'maintenance'])->name('asset.maintenance');
+    Route::get('laporan/aset', [AssetController::class, 'report'])->name('laporan.aset');
     Route::get('createqr', [QRCodeController::class, 'index'])->name('createqr.index');
 
     Route::get('monitoring-peminjaman', [PeminjamanController::class, 'monitoring'])->name('peminjaman.monitoring');
     Route::get('monitoring-peminjaman/load-more', [PeminjamanController::class, 'loadMore'])->name('peminjaman.monitoring.loadMore');
     Route::patch('peminjaman/{peminjaman}/status', [PeminjamanController::class, 'updateStatusWeb'])->name('peminjaman.status');
+    Route::get('laporan', [MonthlyLoanReportController::class, 'index'])->name('laporan.index');
     Route::get('laporan/peminjaman/bulanan', [MonthlyLoanReportController::class, 'page'])->name('laporan.peminjaman.bulanan');
 });

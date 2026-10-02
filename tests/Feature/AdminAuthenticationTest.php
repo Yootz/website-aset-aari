@@ -172,4 +172,49 @@ class AdminAuthenticationTest extends TestCase
         $this->post(route('logout'))->assertRedirect(route('login'));
         $this->assertGuest();
     }
+
+    public function test_dashboard_summary_shows_asset_and_loan_status_breakdowns(): void
+    {
+        $this->actingAs(User::factory()->admin()->create());
+        $this->createLoanForDisplay();
+
+        Asset::create([
+            'a_code' => 'AST-AVAILABLE',
+            'a_name' => 'Laptop tersedia',
+            'a_type' => 'Elektronik',
+            'a_desc' => 'Aset tersedia.',
+            'a_status' => 'Available',
+        ]);
+        Asset::create([
+            'a_code' => 'AST-MAINTENANCE',
+            'a_name' => 'Laptop maintenance',
+            'a_type' => 'Elektronik',
+            'a_desc' => 'Aset maintenance.',
+            'a_status' => 'maintenance',
+        ]);
+
+        Peminjaman::create([
+            'p_code' => 'PJM-APPROVED',
+            'e_code' => 'EMP-TEST',
+            'tgl_pinjam' => '2026-10-01',
+            'p_status' => 'approved',
+        ]);
+        Peminjaman::create([
+            'p_code' => 'PJM-RETURNED',
+            'e_code' => 'EMP-TEST',
+            'tgl_pinjam' => '2026-09-20',
+            'p_status' => 'returned',
+        ]);
+
+        $this->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee('Tersedia')
+            ->assertSee('Dipinjam')
+            ->assertSee('Maintenance')
+            ->assertSee('Menunggu')
+            ->assertSee('Berjalan')
+            ->assertSee('Selesai')
+            ->assertDontSee('Berisi anggota')
+            ->assertDontSee('Rata-rata / divisi');
+    }
 }
